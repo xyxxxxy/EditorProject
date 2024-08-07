@@ -1,0 +1,42 @@
+[
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Source\\EditorProject\\EditorProject.Build.cs",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.37.32822\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_Default\\EditorProject.272.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Source\\EditorProject\\EditorProject.cpp",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.37.32822\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_Default\\EditorProject.272.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Source\\EditorProject\\EditorProject.h",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.37.32822\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_Default\\EditorProject.272.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Source\\EditorProject\\EditorProjectGameModeBase.cpp",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.37.32822\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_Default\\EditorProject.272.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Source\\EditorProject\\EditorProjectGameModeBase.h",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.37.32822\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_Default\\EditorProject.272.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	}
+]
