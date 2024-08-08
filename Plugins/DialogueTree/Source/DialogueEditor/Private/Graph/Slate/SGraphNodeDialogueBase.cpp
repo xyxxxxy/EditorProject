@@ -98,9 +98,7 @@ void SGraphNodeDialogueBase::SetOwner(const TSharedRef<SGraphPanel>& OwnerPanel)
 	GraphNode->DEPRECATED_NodeWidget = SharedThis(this);
 
 	//Recreate pins if necessary
-	if (OwnerGraphPanelPtr.Pin()->GetPinVisibility() != SGraphEditor::Pin_Show
-		&& InputPinBox.IsValid()
-		&& OutputPinBox.IsValid())
+	if (OwnerGraphPanelPtr.Pin()->GetPinVisibility() != SGraphEditor::Pin_Show && InputPinBox.IsValid() && OutputPinBox.IsValid())
 	{
 		this->InputPinBox->ClearChildren();
 		this->OutputPinBox->ClearChildren();

@@ -6,6 +6,8 @@
 #include "DialogueSettings.h"
 #include "Kismet/GameplayStatics.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueManagerSubsystem)
+
 void UDialogueManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);

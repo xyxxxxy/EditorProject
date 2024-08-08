@@ -4,6 +4,8 @@
 #include "Dialogue.h"
 #include "Graph/DialogueEdGraph.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(GraphNodeDialogue)
+
 #define LOCTEXT_NAMESPACE "DialogueEdGraph"
 
 UGraphNodeDialogue::UGraphNodeDialogue()

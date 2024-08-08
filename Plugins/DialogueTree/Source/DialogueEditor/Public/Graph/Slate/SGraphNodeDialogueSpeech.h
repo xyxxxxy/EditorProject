@@ -18,12 +18,15 @@ protected:
 	virtual TSharedRef<SWidget> CreateNodeTitleWidget() override;
 
 private:
-	const FSlateBrush* GetTransitionIcon() const;
-	FText GetSpeakerNameText() const;
-	FText GetNodeSubtitleText() const;
-	TSharedRef<SWidget> GetSpeakerNameWidget() const;
-	TSharedRef<SWidget> GetNodeSubtitleWidget() const;
 	TSharedRef<SWidget> GetTitleTextBox() const;
+	
+	TSharedRef<SWidget> GetSpeakerNameWidget() const;
+	FText GetSpeakerNameText() const;
+	
+	TSharedRef<SWidget> GetNodeSubtitleWidget() const;
+	FText GetNodeSubtitleText() const;
+	
+	const FSlateBrush* GetTransitionIcon() const;
 
 private:
 	TObjectPtr<UGraphNodeDialogueSpeech> SpeechNode;

@@ -6,6 +6,7 @@
 #include "Nodes/DialogueSpeechNode.h"
 #include "Transitions/DialogueTransition.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(GraphNodeDialogueSpeech)
 
 #define LOCTEXT_NAMESPACE "SpeechGraphNode"
 
@@ -15,7 +16,7 @@ UGraphNodeDialogueSpeech* UGraphNodeDialogueSpeech::MakeTemplate(UObject* Outer,
 	check(InSpeaker && Outer && TransitionType);
 
 	UGraphNodeDialogueSpeech* NewSpeech = NewObject<UGraphNodeDialogueSpeech>(Outer);
-	NewSpeech->SetSpeaker(InSpeaker);
+	NewSpeech->SetSpeakerSocket(InSpeaker);
 	NewSpeech->SetTransitionType(TransitionType);
 
 	return NewSpeech;
@@ -52,7 +53,7 @@ FName UGraphNodeDialogueSpeech::GetBaseID() const
 {
 	if (SpeechTitle.IsNone())
 	{
-		return FName("Speech");
+		return FName("Speech[NONE TITLE]");
 	}
 	
 	return SpeechTitle;
@@ -85,7 +86,7 @@ EDialogueConnectionLimit UGraphNodeDialogueSpeech::GetOutputConnectionLimit() co
 
 void UGraphNodeDialogueSpeech::CreateAssetNode(UDialogue* InAsset)
 {
-	check(Speaker.Speaker);
+	check(Speaker.SpeakerSocket);
 	check(TransitionType);
 
 	//Create node
@@ -94,7 +95,7 @@ void UGraphNodeDialogueSpeech::CreateAssetNode(UDialogue* InAsset)
     
 	//Init data 
 	FSpeechDetails SpeechDetails;
-	SpeechDetails.SpeakerName = Speaker.Speaker->GetSpeakerName();
+	SpeechDetails.SpeakerName = Speaker.SpeakerSocket->GetSpeakerName();
 	SpeechDetails.bIgnoreContent = bIgnoreContent;
 
 	SpeechDetails.SpeechText = SpeechText;
@@ -130,16 +131,16 @@ void UGraphNodeDialogueSpeech::SetTransitionType(TSubclassOf<UDialogueTransition
 	TransitionType = InType;
 }
 
-void UGraphNodeDialogueSpeech::SetSpeaker(UDialogueSpeakerSocket* InSpeaker)
+void UGraphNodeDialogueSpeech::SetSpeakerSocket(UDialogueSpeakerSocket* InSpeaker)
 {
-	Speaker.Speaker = InSpeaker;
+	Speaker.SpeakerSocket = InSpeaker;
 }
 
-UDialogueSpeakerSocket* UGraphNodeDialogueSpeech::GetSpeaker() const
+UDialogueSpeakerSocket* UGraphNodeDialogueSpeech::GetSpeakerSocket() const
 {
-	if (Speaker.Speaker)
+	if (Speaker.SpeakerSocket)
 	{
-		return Speaker.Speaker;
+		return Speaker.SpeakerSocket;
 	}
     
 	return nullptr;

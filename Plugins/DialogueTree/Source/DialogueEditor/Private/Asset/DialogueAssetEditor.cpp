@@ -23,6 +23,9 @@ void FDialogueAssetEditor::InitEditor(const EToolkitMode::Type Mode, const TShar
 	ObjectsToEdit.Add(InObject);
 
 	Dialogue = Cast<UDialogue>(InObject);
+
+	FPropertyEditorModule& PropertyEditorModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>(TEXT("PropertyEditor"));
+	NodeDetailsView = PropertyEditorModule.CreateDetailView(FDetailsViewArgs());
 	
 	CreateGraph();
 

@@ -1,6 +1,8 @@
 ﻿
 #include "Nodes/DialogueNode.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueNode)
+
 UDialogue* UDialogueNode::GetDialogue() const
 {
 	return Dialogue;

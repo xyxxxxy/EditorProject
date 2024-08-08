@@ -6,6 +6,8 @@
 // #include "DialogueManagerSubsystem.h"
 // #include "LogDialogueTree.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueSpeakerComponent)
+
 UDialogueSpeakerComponent::UDialogueSpeakerComponent()
 {
 	//Prevent the speaker from ticking

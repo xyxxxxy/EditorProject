@@ -4,6 +4,8 @@
 #include "Dialogue.h"
 #include "GraphEditAction.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueEdGraph)
+
 UDialogueEdGraph::UDialogueEdGraph()
 {
 	AddOnGraphChangedHandler(FOnGraphChanged::FDelegate::CreateUObject(this,&UDialogueEdGraph::OnDialogueGraphChanged));

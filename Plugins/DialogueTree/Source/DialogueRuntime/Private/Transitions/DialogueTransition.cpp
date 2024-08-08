@@ -5,6 +5,8 @@
 #include "Dialogue.h"
 #include "DialogueSpeakerComponent.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueTransition)
+
 UDialogueTransition::UDialogueTransition()
 {
 	OnContentEnd.BindUFunction(this, "OnDonePlayingContent");

@@ -23,7 +23,7 @@ public:
 protected:
 	TWeakObjectPtr<UDialogue> Dialogue;
 	TWeakPtr<FDialogueAssetEditor> Editor;
-	TSharedPtr<IDetailsView> NodeDetailsView;
+	TWeakPtr<IDetailsView> NodeDetailsView;
 	
 	TSharedPtr<FUICommandList> CommandList;
 };

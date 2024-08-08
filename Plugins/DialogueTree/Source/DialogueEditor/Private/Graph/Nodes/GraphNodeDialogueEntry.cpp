@@ -3,6 +3,8 @@
 #include "Dialogue.h"
 #include "Nodes/DialogueEntryNode.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(GraphNodeDialogueEntry)
+
 #define LOCTEXT_NAMESPACE "GraphNodeDialogueEntry"
 
 void UGraphNodeDialogueEntry::AllocateDefaultPins()

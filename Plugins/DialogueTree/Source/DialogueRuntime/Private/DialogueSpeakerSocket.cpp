@@ -2,6 +2,8 @@
 #include "DialogueSpeakerSocket.h"
 #include "Dialogue.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueSpeakerSocket)
+
 void UDialogueSpeakerSocket::SetSpeakerName(FName InSpeakerName)
 {
 	SpeakerName = InSpeakerName;

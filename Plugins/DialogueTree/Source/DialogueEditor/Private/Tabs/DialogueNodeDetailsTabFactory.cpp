@@ -7,7 +7,7 @@
 #define LOCTEXT_NAMESPACE "DialogueNodeDetailsTabFactory"
 
 FDialogueNodeDetailsTabFactory::FDialogueNodeDetailsTabFactory(TSharedPtr<FDialogueAssetEditor> InEditor)
-:FWorkflowTabFactory(FDialogueEditorTabs::NodeDetailsTabID,InEditor)
+:FWorkflowTabFactory(FDialogueEditorTabs::NodeDetailsTabID, InEditor)
 {
 	Editor = InEditor;
 	TabLabel = LOCTEXT("DialogueNodeDetailsTabLabel","Node Details");
@@ -27,9 +27,8 @@ TSharedRef<SWidget> FDialogueNodeDetailsTabFactory::CreateTabBody(const FWorkflo
 		DetailsViewArgs.bAllowSearch = true;
 		DetailsViewArgs.NotifyHook = EditorPtr.Get();
 	}
-	
 	EditorPtr->GetNodeDetailView() = PropertyEditorModule.CreateDetailView(DetailsViewArgs);
-	check(EditorPtr->GetNodeDetailView());
+	//check(EditorPtr->GetNodeDetailView());
 	EditorPtr->GetNodeDetailView()->SetObject(nullptr);
 	
 	return SNew(SVerticalBox)
@@ -43,7 +42,7 @@ TSharedRef<SWidget> FDialogueNodeDetailsTabFactory::CreateTabBody(const FWorkflo
 
 FText FDialogueNodeDetailsTabFactory::GetTabToolTipText(const FWorkflowTabSpawnInfo& Info) const
 {
-	return LOCTEXT("DialogueNodeDetailsTabToolTipText","The Node Details view for doing Node Details things.");
+	return LOCTEXT("DialogueNodeDetailsTabToolTipText","The Node Details view for modifying Node Details.");
 }
 
 #undef LOCTEXT_NAMESPACE

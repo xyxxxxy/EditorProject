@@ -50,12 +50,10 @@ public:
 	virtual TMap<FName, UDialogueSpeakerComponent*> GetSpeakers() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
-	void StartDialogueWithNames(UDialogue* InDialogue, 
-		TMap<FName, UDialogueSpeakerComponent*> InSpeakers);
+	void StartDialogueWithNames(UDialogue* InDialogue, TMap<FName, UDialogueSpeakerComponent*> InSpeakers);
 	
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
-	void StartDialogue(UDialogue* InDialogue, 
-		TArray<UDialogueSpeakerComponent*> InSpeakers);
+	void StartDialogue(UDialogue* InDialogue, TArray<UDialogueSpeakerComponent*> InSpeakers);
 	
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
 	void EndDialogue();
@@ -83,8 +81,7 @@ public:
 	void MarkNodeVisited(UDialogue* TargetDialogue, int32 TargetNodeIndex);
 	void MarkNodeUnvisited(UDialogue* TargetDialogue, int32 TargetNodeIndex);
 	void ClearAllNodeVisitsForDialogue(UDialogue* TargetDialogue);
-	bool WasNodeVisited(const UDialogue* TargetDialogue, 
-		int32 TargetNodeIndex) const;
+	bool WasNodeVisited(const UDialogue* TargetDialogue, int32 TargetNodeIndex) const;
 
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Dialogue")

@@ -15,6 +15,6 @@ class DIALOGUERUNTIME_API UDialogueSettings : public UDeveloperSettings
 	
 public:
 	UPROPERTY(Config,EditAnywhere,BlueprintReadOnly,Category = "Dialogue")
-	TSubclassOf<ADialogueController> DialogueControllerType = LoadClass<ADialogueController>(nullptr,*DefaultControllerCoords);
+	TSubclassOf<ADialogueController> DialogueControllerType = LoadClass<class ADialogueController>(nullptr,*DefaultControllerCoords);
 	
 };

@@ -24,9 +24,10 @@ void SDialogueGraphEditor::Construct(const FArguments& InArgs, const TSharedPtr<
 
 void SDialogueGraphEditor::OnSelectedNodesChanged(const TSet<UObject*>& SelectedObjects)
 {
+	TSharedPtr<IDetailsView> DetailsView = NodeDetailsView.Pin();
 	if(SelectedObjects.Num() < 1)
 	{
-		NodeDetailsView->SetObject(nullptr);
+		DetailsView->SetObject(nullptr);
 		return;
 	}
 
@@ -38,7 +39,7 @@ void SDialogueGraphEditor::OnSelectedNodesChanged(const TSet<UObject*>& Selected
 			SelectedNodes.Add(CurrentObject);
 		}
 	}
-	check(NodeDetailsView);
-	NodeDetailsView->SetObjects(SelectedNodes);
+	check(DetailsView);
+	DetailsView->SetObjects(SelectedNodes);
 	
 }

@@ -5,6 +5,8 @@
 #include "DialogueSpeakerSocket.h"
 #include "Nodes/DialogueNode.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(Dialogue)
+
 FColor FDefaultDialogueColors::PopColor()
 {
 	const FColor TargetColor = DefaultColors[ColorIndex];

@@ -1,6 +1,8 @@
 ﻿
 #include "Graph/Nodes/GraphNodeDialogueBase.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(GraphNodeDialogueBase)
+
 #define LOCTEXT_NAMESPACE "GraphNodeDialogueBase"
 
 UGraphNodeDialogueBase::UGraphNodeDialogueBase()

@@ -14,7 +14,7 @@ struct DIALOGUEEDITOR_API FPickableDialogueSpeaker
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, Category = "Dialogue")
-	UDialogueSpeakerSocket* Speaker;
+	UDialogueSpeakerSocket* SpeakerSocket;
 };
 
 UCLASS()
@@ -53,8 +53,8 @@ public:
 	UClass* GetTransitionType() const;
 	void SetTransitionType(TSubclassOf<UDialogueTransition> InType);
 	
-	void SetSpeaker(UDialogueSpeakerSocket* InSpeaker);
-	UDialogueSpeakerSocket* GetSpeaker() const;
+	void SetSpeakerSocket(UDialogueSpeakerSocket* InSpeaker);
+	UDialogueSpeakerSocket* GetSpeakerSocket() const;
 
 private:
 	void OnChangeSpeechTitle();

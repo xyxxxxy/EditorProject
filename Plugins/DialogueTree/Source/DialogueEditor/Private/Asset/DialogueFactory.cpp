@@ -2,6 +2,8 @@
 #include "Asset/DialogueFactory.h"
 #include "Dialogue.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueFactory)
+
 UDialogueFactory::UDialogueFactory(const FObjectInitializer& ObjectInitializer)
 :Super(ObjectInitializer)
 {

@@ -3,6 +3,8 @@
 #include "Nodes/DialogueSpeechNode.h"
 #include "Dialogue.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(AutoDialogueTransition)
+
 FText UAutoDialogueTransition::GetDisplayName() const
 {
 	return FText::FromString("AutoTransition");

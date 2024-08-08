@@ -4,6 +4,8 @@
 #include "DialogueRuntimeLogChannels.h"
 #include "Transitions/DialogueTransition.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueSpeechNode)
+
 void UDialogueSpeechNode::InitSpeechData(const FSpeechDetails& InDetails, TSubclassOf<UDialogueTransition> TransitionType)
 {
 	check(TransitionType);
