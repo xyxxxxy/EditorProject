@@ -53,7 +53,7 @@ private:
 	const float BASE_PIN_PUSH_AMOUNT = -40.f;
 
 protected:
-	const ETextJustify::Type TEXT_JUSTIFY = ETextJustify::Center;
+	const ETextJustify::Type TEXT_JUSTIFY = ETextJustify::Left;
 	const int32 BASE_FONT_SIZE = 10;
 	const float WRAP_TEXT_AT = 250.f;
 };

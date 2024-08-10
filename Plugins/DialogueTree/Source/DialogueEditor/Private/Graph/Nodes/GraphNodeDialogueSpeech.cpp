@@ -4,6 +4,7 @@
 #include "SpeechDetails.h"
 #include "Dialogue.h"
 #include "Nodes/DialogueSpeechNode.h"
+#include "Graph/DialogueEdGraph.h"
 #include "Transitions/DialogueTransition.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(GraphNodeDialogueSpeech)
@@ -53,10 +54,11 @@ FName UGraphNodeDialogueSpeech::GetBaseID() const
 {
 	if (SpeechTitle.IsNone())
 	{
-		return FName("Speech[NONE TITLE]");
+		return FName("SPEECH [NONE TITLE]");
 	}
-	
-	return SpeechTitle;
+	FString Result = SpeechTitle.ToString();
+	Result = FString(TEXT("[")) + Result + FString(TEXT("]"));
+	return FName(Result);
 }
 
 FText UGraphNodeDialogueSpeech::GetNodeTitle(ENodeTitleType::Type TitleType) const
@@ -66,7 +68,14 @@ FText UGraphNodeDialogueSpeech::GetNodeTitle(ENodeTitleType::Type TitleType) con
 
 FLinearColor UGraphNodeDialogueSpeech::GetNodeTitleColor() const
 {
-	return Super::GetNodeTitleColor();
+	UDialogueEdGraph* Graph = GetDialogueGraph();
+	if(!Graph || !Speaker.SpeakerSocket)
+	{
+		return FColor::White;
+	}
+
+	FName SpeakerName = Speaker.SpeakerSocket->GetSpeakerName();
+	return Graph->GetSpeakerColor(SpeakerName);
 }
 
 FText UGraphNodeDialogueSpeech::GetContextMenuName() const

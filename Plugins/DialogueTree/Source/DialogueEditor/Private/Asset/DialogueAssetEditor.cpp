@@ -2,8 +2,10 @@
 #include "Asset/DialogueAssetEditor.h"
 
 #include "Dialogue.h"
+#include "DialogueEditorCommands.h"
 #include "GraphEditorActions.h"
 #include "Asset/DialogueAssetAppMode.h"
+#include "Asset/DialogueEditorToolbar.h"
 #include "Graph/DialogueEdGraph.h"
 #include "Graph/DialogueEdGraphSchema.h"
 #include "Kismet2/BlueprintEditorUtils.h"
@@ -32,6 +34,9 @@ void FDialogueAssetEditor::InitEditor(const EToolkitMode::Type Mode, const TShar
 	FGenericCommands::Register();
 	FGraphEditorCommands::Register();
 	
+	BindToolbarCommands();
+	CreateToolbar();
+	
 	InitAssetEditor(
 		Mode,
 		InitToolkitHost,
@@ -41,7 +46,7 @@ void FDialogueAssetEditor::InitEditor(const EToolkitMode::Type Mode, const TShar
 		true,
 		ObjectsToEdit
 	);
-
+	
 	AddApplicationMode(TEXT("DialogueAssetAppMode"),MakeShareable(new FDialogueAssetAppMode(SharedThis(this))));
 
 	SetCurrentMode(TEXT("DialogueAssetAppMode"));
@@ -171,28 +176,33 @@ void FDialogueAssetEditor::SpawnInitialNodes()
 	);
 }
 
-void FDialogueAssetEditor::OnPasteNodes()
+void FDialogueAssetEditor::CreateToolbar()
 {
+	FName ParentToolbarName;
+	const FName ToolBarName = GetToolMenuToolbarName(ParentToolbarName);
+
+	UToolMenus* ToolMenus = UToolMenus::Get();
+	UToolMenu* FoundMenu = ToolMenus->FindMenu(ToolBarName);
+	if (!FoundMenu || !FoundMenu->IsRegistered())
+	{
+		FoundMenu = ToolMenus->RegisterMenu(ToolBarName, ParentToolbarName, EMultiBoxType::ToolBar);
+	}
+
+	if (FoundMenu)
+	{
+		AssetToolbar = MakeShareable(new FDialogueEditorToolbar(SharedThis(this), FoundMenu));
+	}
 }
 
-void FDialogueAssetEditor::PasteNodesAtLocation(const FVector2D& PasteLocation)
+void FDialogueAssetEditor::BindToolbarCommands()
 {
-}
+	FDialogueEditorCommands::Register();
+	const FDialogueEditorCommands& Commands = FDialogueEditorCommands::Get();
 
-bool FDialogueAssetEditor::CanPasteNodes() const
-{
-	return true;
+	ToolKitCommands->MapAction(Commands.CompileAsset, FExecuteAction::CreateSP(this,&FDialogueAssetEditor::OnCompile), FCanExecuteAction());
 }
 
 void FDialogueAssetEditor::OnFinishedChangingProperties(const FPropertyChangedEvent& PropertyChangedEvent)
-{
-}
-
-void FDialogueAssetEditor::ExtendToolbar()
-{
-}
-
-void FDialogueAssetEditor::FillToolbarMenu(FToolBarBuilder& ToolbarBuilder)
 {
 }
 
@@ -209,63 +219,7 @@ void FDialogueAssetEditor::RegisterCommands()
 {
 }
 
-void FDialogueAssetEditor::OnRenameNode()
-{
-}
 
-bool FDialogueAssetEditor::CanRenameNode() const
-{
-	return true;
-}
-
-void FDialogueAssetEditor::OnDuplicateNodes()
-{
-}
-
-bool FDialogueAssetEditor::CanDuplicateNodes() const
-{
-	return true;
-}
-
-void FDialogueAssetEditor::OnSelectAll()
-{
-}
-
-bool FDialogueAssetEditor::CanSelectAll() const
-{
-	return true;
-}
-
-void FDialogueAssetEditor::OnDeleteNodes()
-{
-}
-
-void FDialogueAssetEditor::OnDeleteDuplicatableNodes()
-{
-}
-
-bool FDialogueAssetEditor::CanDeleteNodes() const
-{
-	return true;
-}
-
-void FDialogueAssetEditor::OnCopyNodes()
-{
-}
-
-bool FDialogueAssetEditor::CanCopyNodes() const
-{
-	return true;
-}
-
-void FDialogueAssetEditor::OnCutNodes()
-{
-}
-
-bool FDialogueAssetEditor::CanCutNodes() const
-{
-	return true;
-}
 
 void FDialogueAssetEditor::OnChangeSelection(const TSet<UObject*>& SelectedObjects)
 {

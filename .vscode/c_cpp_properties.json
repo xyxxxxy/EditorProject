@@ -1,22 +1,23 @@
 {
-	"configurations": [
-		{
-			"name": "EditorProjectEditor Editor Win64 Development (EditorProject)",
-			"compilerPath": "E:\\Software\\VS\\VC\\Tools\\MSVC\\14.37.32822\\bin\\Hostx64\\x64\\cl.exe",
-			"cStandard": "c17",
-			"cppStandard": "c++17",
-			"intelliSenseMode": "msvc-x64",
-			"configurationProvider": "epic.ue",
-			"compileCommands": "E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject.json"
-		},
-		{
-			"name": "Win32",
-			"compilerPath": "E:\\Software\\VS\\VC\\Tools\\MSVC\\14.37.32822\\bin\\Hostx64\\x64\\cl.exe",
-			"cStandard": "c17",
-			"cppStandard": "c++17",
-			"intelliSenseMode": "msvc-x64",
-			"configurationProvider": "epic.ue",
-			"compileCommands": "E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_Default.json"
-		}
-	]
+    "configurations": [
+        {
+            "name": "EditorProjectEditor Editor Win64 Development (EditorProject)",
+            "compilerPath": "E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64",
+            "configurationProvider": "epic.ue",
+            "compileCommands": "E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject.json"
+        },
+        {
+            "name": "Win32",
+            "compilerPath": "E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64",
+            "configurationProvider": "epic.ue",
+            "compileCommands": "E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_Default.json"
+        }
+    ],
+    "version": 4
 }

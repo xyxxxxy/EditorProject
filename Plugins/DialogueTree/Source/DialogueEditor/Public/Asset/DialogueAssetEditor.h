@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 #include "WorkflowOrientedApp/WorkflowCentricApplication.h"
 
+class FDialogueEditorToolbar;
 class UDialogue;
 
 class FDialogueAssetEditor : public FWorkflowCentricApplication, public FEditorUndoClient, public FNotifyHook, public FGCObject
@@ -40,40 +41,21 @@ public:
 	TSharedPtr<IDetailsView> GetNodeDetailView() const;
 
 	void SpawnInitialNodes();
+
+	void CreateToolbar();
+	void BindToolbarCommands();
 	
-	void OnPasteNodes();
-	void PasteNodesAtLocation(const FVector2D& PasteLocation);
-	bool CanPasteNodes() const;
+
 	
 	void OnFinishedChangingProperties(const FPropertyChangedEvent& PropertyChangedEvent);
-
-	void ExtendToolbar();
-	void FillToolbarMenu(FToolBarBuilder& ToolbarBuilder);
-
+	
 	FSlateIcon GetStatusImage() const;
 	
 	void OnCompile();
 	
 	void RegisterCommands();
 	
-	void OnRenameNode();
-	bool CanRenameNode() const;
 
-	void OnDuplicateNodes();
-	bool CanDuplicateNodes() const;
-	
-	void OnSelectAll();
-	bool CanSelectAll() const;
-	
-	void OnDeleteNodes(); 
-	void OnDeleteDuplicatableNodes();
-	bool CanDeleteNodes() const;
-	
-	void OnCopyNodes();
-	bool CanCopyNodes() const;
-	
-	void OnCutNodes();
-	bool CanCutNodes() const;
 	
 	void OnChangeSelection(const TSet<UObject*>& SelectedObjects);
 
@@ -85,5 +67,6 @@ private:
 
 	TSharedPtr<SGraphEditor> GraphEditor;
 
-	TSharedPtr<FUICommandList> EditorCommands;
+	TSharedPtr<FUICommandList> ToolKitCommands;
+	TSharedPtr<FDialogueEditorToolbar> AssetToolbar;
 };

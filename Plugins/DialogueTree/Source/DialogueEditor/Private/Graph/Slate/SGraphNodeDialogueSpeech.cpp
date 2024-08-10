@@ -5,10 +5,9 @@
 #include "Graph/Nodes/GraphNodeDialogueSpeech.h"
 #include "DialogueSpeakerSocket.h"
 
-
 #define LOCTEXT_NAMESPACE "SGraphNodeDialogueSpeech"
 
-void SGraphNodeDialogueSpeech::Construct(const FArguments& InArgs, UEdGraphNode* InNode)
+void SGraphNodeDialogueSpeech::Construct(const FArguments &InArgs, UEdGraphNode *InNode)
 {
 	SpeechNode = Cast<UGraphNodeDialogueSpeech>(InNode);
 	check(SpeechNode);
@@ -19,57 +18,88 @@ void SGraphNodeDialogueSpeech::Construct(const FArguments& InArgs, UEdGraphNode*
 TSharedRef<SWidget> SGraphNodeDialogueSpeech::CreateNodeContentArea()
 {
 	check(SpeechNode);
-	
-	return SNew(SVerticalBox)
-			+ SVerticalBox::Slot()
-			.Padding(SUBTITLE_PADDING)
+
+	FText SpeechText = SpeechNode->GetSpeechText();
+	if (SpeechText.IsEmptyOrWhitespace())
+	{
+		return SGraphNodeDialogueBase::CreateNodeContentArea();
+	}
+	else
+	{
+		return SNew(SOverlay) 
+			+ SOverlay::Slot()
+			.Padding(10.f, 7.f, 10.f, 7.f)
 			[
-				GetTitleTextBox()
+				SNew(STextBlock)
+				.Font(FCoreStyle::GetDefaultFontStyle("Bold", BASE_FONT_SIZE))
+				.Justification(TEXT_JUSTIFY)
+				.Text(SpeechText)
+				.WrapTextAt(WRAP_TEXT_AT)
 			]
-			+ SVerticalBox::Slot()
-			.Padding(SUBTITLE_PADDING)
+			+ SOverlay::Slot()
 			[
-				CreateNodeTitleWidget()
+				SGraphNodeDialogueBase::CreateNodeContentArea()
 			];
+	}
 }
 
 TSharedRef<SWidget> SGraphNodeDialogueSpeech::CreateNodeTitleWidget()
 {
+	//Get graph
 	check(SpeechNode);
-	return SNew(STextBlock)
-		.Justification(TEXT_JUSTIFY)
-		.Text(SpeechNode->GetSpeechText())
-		.WrapTextAt(20.f)
-		.TextStyle(&FDialogueEditorStyle::GetTextStyle(TEXT("NodeSubtitleStyle")));
+
+	//Assemble widget 
+	return SNew(SHorizontalBox)
+		+ SHorizontalBox::Slot()
+		.HAlign(HAlign_Left)
+		.VAlign(VAlign_Center)
+		.AutoWidth()
+		.Padding(TITLE_BOX_PADDING)
+		.FillWidth(1.f)
+		[
+			GetTitleTextBox()
+		]
+		+ SHorizontalBox::Slot()
+		.HAlign(HAlign_Right)
+		.VAlign(VAlign_Center)
+		.AutoWidth()
+		.Padding(ICON_PADDING)
+		[
+			SNew(SImage)
+			.Image(GetTransitionIcon())
+		];
 }
 
 TSharedRef<SWidget> SGraphNodeDialogueSpeech::GetTitleTextBox() const
 {
 	return SNew(SVerticalBox)
-	+ SVerticalBox::Slot()
-	[
-		GetSpeakerNameWidget()
-	]
-	+ SVerticalBox::Slot()
-	.Padding(SUBTITLE_PADDING)
-	.AutoHeight()
-	[
-		GetNodeSubtitleWidget()
-	];	
+		+ SVerticalBox::Slot()
+		.HAlign(HAlign_Left)
+		[
+			GetSpeakerNameWidget()
+		]
+		+ SVerticalBox::Slot()
+		.Padding(SUBTITLE_PADDING)
+		.HAlign(HAlign_Left)
+		.AutoHeight()
+		[
+			GetNodeSubtitleWidget()
+		];
 }
 
 TSharedRef<SWidget> SGraphNodeDialogueSpeech::GetSpeakerNameWidget() const
 {
 	return SNew(STextBlock)
 		.Justification(TEXT_JUSTIFY)
+		.TextStyle(&FDialogueEditorStyle::GetTextStyle(TEXT("NodeTitleStyle")))
 		.Text(GetSpeakerNameText());
 }
 
 FText SGraphNodeDialogueSpeech::GetSpeakerNameText() const
 {
 	check(SpeechNode);
-	UDialogueSpeakerSocket* SpeakerSocket = SpeechNode->GetSpeakerSocket();
-	
+	UDialogueSpeakerSocket *SpeakerSocket = SpeechNode->GetSpeakerSocket();
+
 	FText SpeakerNameText = LOCTEXT("ErrorNameText", "Error: Speaker Removed");
 
 	if (SpeakerSocket && !SpeakerSocket->GetSpeakerName().IsNone())
@@ -94,11 +124,9 @@ FText SGraphNodeDialogueSpeech::GetNodeSubtitleText() const
 	return FText::FromName(SpeechNode->GetID());
 }
 
-const FSlateBrush* SGraphNodeDialogueSpeech::GetTransitionIcon() const
+const FSlateBrush *SGraphNodeDialogueSpeech::GetTransitionIcon() const
 {
 	return FDialogueEditorStyle::GetBrush("InputTransitionIcon");
 }
 
-
 #undef LOCTEXT_NAMESPACE
-
