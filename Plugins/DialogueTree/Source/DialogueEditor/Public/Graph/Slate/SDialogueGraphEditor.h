@@ -20,6 +20,17 @@ public:
 public:
 	void OnSelectedNodesChanged(const TSet<UObject*>& SelectedObjects);
 
+public:
+	virtual void BindGraphCommands();
+
+	static void UndoGraphAction();
+	static bool CanEdit();
+
+	bool IsTabFocused() const;
+
+	void DeleteSelectedNodes();
+	bool CanDeleteNodes();
+
 protected:
 	TWeakObjectPtr<UDialogue> Dialogue;
 	TWeakPtr<FDialogueAssetEditor> Editor;

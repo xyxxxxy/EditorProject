@@ -7,11 +7,11 @@
 
 class ADialogueController;
 
-UCLASS(Config = Engine,DefaultConfig,meta = (DisplayName = "Dialogue Tree"))
+UCLASS(Config = Game, DefaultConfig, meta = (DisplayName = "Dialogue Tree"))
 class DIALOGUERUNTIME_API UDialogueSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()
-	const FString DefaultControllerCoords = "/Script/Engine.Blueprint'/DialogueTree/Blueprints/Controllers/BP_BasicDialogueController.BP_BasicDialogueController_C'";
+	const FString DefaultControllerCoords = "/Script/Engine.Blueprint'/DialogueTree/Controller/BP_BasicDialogueController.BP_BasicDialogueController_C'";
 	
 public:
 	UPROPERTY(Config,EditAnywhere,BlueprintReadOnly,Category = "Dialogue")

@@ -10,6 +10,7 @@
 #include "Graph/DialogueEdGraphSchema.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 #include "Framework/Commands/GenericCommands.h"
+#include "DialogueEditorLogChannels.h"
 
 #define LOCTEXT_NAMESPACE "DialogueAssetEditor"
 
@@ -31,11 +32,9 @@ void FDialogueAssetEditor::InitEditor(const EToolkitMode::Type Mode, const TShar
 	
 	CreateGraph();
 
-	FGenericCommands::Register();
-	FGraphEditorCommands::Register();
+	ToolKitCommands = MakeShareable(new FUICommandList());
 	
-	BindToolbarCommands();
-	CreateToolbar();
+	UE_LOG(LogDialogueEditor, Error, TEXT("Pre Init Editor"));
 	
 	InitAssetEditor(
 		Mode,
@@ -46,10 +45,15 @@ void FDialogueAssetEditor::InitEditor(const EToolkitMode::Type Mode, const TShar
 		true,
 		ObjectsToEdit
 	);
-	
+
+
+
 	AddApplicationMode(TEXT("DialogueAssetAppMode"),MakeShareable(new FDialogueAssetAppMode(SharedThis(this))));
 
 	SetCurrentMode(TEXT("DialogueAssetAppMode"));
+
+	BindToolbarCommands();
+	CreateToolbar();
 
 	RegenerateMenusAndToolbars();
 }
@@ -79,14 +83,24 @@ void FDialogueAssetEditor::CreateGraph()
 
 }
 
+void FDialogueAssetEditor::SetGraph(UEdGraph* InGraph)
+{
+	Graph = InGraph;
+}
+
 UEdGraph* FDialogueAssetEditor::GetGraph() const
 {
 	return Graph;
 }
 
+void FDialogueAssetEditor::SetGraphEditor(TSharedPtr<SGraphEditor> InGraphEditor)
+{
+	GraphEditor = InGraphEditor;
+}
+
 TSharedPtr<SGraphEditor> FDialogueAssetEditor::GetGraphEditor() const
 {
-	return GraphEditor;
+	return GraphEditor.Pin();
 }
 
 FName FDialogueAssetEditor::GetToolkitFName() const
@@ -191,6 +205,7 @@ void FDialogueAssetEditor::CreateToolbar()
 	if (FoundMenu)
 	{
 		AssetToolbar = MakeShareable(new FDialogueEditorToolbar(SharedThis(this), FoundMenu));
+		AssetToolbar->BuildAssetToolbar(FoundMenu);
 	}
 }
 
@@ -199,27 +214,25 @@ void FDialogueAssetEditor::BindToolbarCommands()
 	FDialogueEditorCommands::Register();
 	const FDialogueEditorCommands& Commands = FDialogueEditorCommands::Get();
 
-	ToolKitCommands->MapAction(Commands.CompileAsset, FExecuteAction::CreateSP(this,&FDialogueAssetEditor::OnCompile), FCanExecuteAction());
+
+	GetToolkitCommands()->MapAction(
+		Commands.CompileAsset, 
+		FExecuteAction::CreateSP(this,&FDialogueAssetEditor::OnCompile), 
+		FCanExecuteAction()
+	);
 }
 
 void FDialogueAssetEditor::OnFinishedChangingProperties(const FPropertyChangedEvent& PropertyChangedEvent)
 {
 }
 
-FSlateIcon FDialogueAssetEditor::GetStatusImage() const
-{
-	return FSlateIcon();
-}
-
 void FDialogueAssetEditor::OnCompile()
 {
+    check(Graph);
+	UE_LOG(LogDialogueEditor, Warning, TEXT("On Compile"));
+    UDialogueEdGraph* TargetDialogueGraph = CastChecked<UDialogueEdGraph>(Graph);
+    TargetDialogueGraph->CompileAsset();
 }
-
-void FDialogueAssetEditor::RegisterCommands()
-{
-}
-
-
 
 void FDialogueAssetEditor::OnChangeSelection(const TSet<UObject*>& SelectedObjects)
 {

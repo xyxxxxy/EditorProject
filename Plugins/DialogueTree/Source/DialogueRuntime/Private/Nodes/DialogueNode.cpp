@@ -1,5 +1,6 @@
 ﻿
 #include "Nodes/DialogueNode.h"
+#include "DialogueRuntimeLogChannels.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueNode)
 
@@ -37,6 +38,10 @@ TArray<UDialogueNode*> UDialogueNode::GetChildren() const
 TArray<UDialogueNode*> UDialogueNode::GetParent() const
 {
 	return Parent;
+}
+void UDialogueNode::EnterNode()
+{
+	UE_LOG(LogDialogueRuntime, Warning, TEXT("Enter Node : %s"), *GetNameSafe(this));
 }
 
 int32 UDialogueNode::GetNodeIndex() const

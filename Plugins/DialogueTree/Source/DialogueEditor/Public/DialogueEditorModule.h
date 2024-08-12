@@ -26,7 +26,11 @@ private:
 
 	void RegisterCustomClassLayout(const TSubclassOf<UObject> Class, const FOnGetDetailCustomizationInstance DetailLayout);
 
+	void RegisterCustomStructLayoutForStruct(const UScriptStruct& Struct, const FOnGetPropertyTypeCustomizationInstance DetailLayout);
+	void RegisterCustomStructLayoutForClass(const TSubclassOf<UObject> Class, const FOnGetPropertyTypeCustomizationInstance DetailLayout);
+
 private:
 	TSet<FName> CustomClassLayouts;
+	TSet<FName> CustomStructLayouts;
 	TSharedPtr<FDialogueNodeFactory> NodeFactory;
 };

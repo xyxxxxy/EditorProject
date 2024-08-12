@@ -4,6 +4,7 @@
 #include "DialogueSpeakerComponent.h"
 #include "GameFramework/Actor.h"
 #include "UObject/UObjectIterator.h"
+#include "DialogueRuntimeLogChannels.h"
 
 ADialogueController::ADialogueController()
 {
@@ -15,22 +16,23 @@ ADialogueController::ADialogueController()
 }
 
 void ADialogueController::SelectOption(int32 InOptionIndex) const
-{
-	
+{	
 }
 
 TMap<FName, UDialogueSpeakerComponent*> ADialogueController::GetSpeakers() const
 {
-	
+	if(CurrentDialogue)
+	{
+		return CurrentDialogue->GetAllSpeakers();
+	}
 	return TMap<FName, UDialogueSpeakerComponent*>();
 }
 
-void ADialogueController::StartDialogueWithNames(UDialogue* InDialogue, 
-	TMap<FName, UDialogueSpeakerComponent*> InSpeakers)
+void ADialogueController::StartDialogueWithNames(UDialogue* InDialogue, TMap<FName, UDialogueSpeakerComponent*> InSpeakers)
 {
 	if (!InDialogue)
 	{
-
+		UE_LOG(LogDialogueRuntime, Error, TEXT("Controller : Could not start dialogue. Provided dialogue null."));
 		return;
 	}
 
@@ -40,18 +42,19 @@ void ADialogueController::StartDialogueWithNames(UDialogue* InDialogue,
 	}
 
 	CurrentDialogue = InDialogue;
-
+	UE_LOG(LogDialogueRuntime, Error, TEXT("Controller : StartDialogueWithNames."));
+	// Open Widget
 	OpenDisplay();
-
+	//Traverse Node
+	CurrentDialogue->OpenDialogue(this, InSpeakers);
 	OnDialogueStarted.Broadcast();
 }
 
-void ADialogueController::StartDialogue(UDialogue* InDialogue, 
-	TArray<UDialogueSpeakerComponent*> InSpeakers)
+void ADialogueController::StartDialogue(UDialogue* InDialogue, TArray<UDialogueSpeakerComponent*> InSpeakers)
 {
 	if (InSpeakers.IsEmpty())
 	{
-
+		UE_LOG(LogDialogueRuntime, Warning, TEXT("Controller : No speakers provided on dialogue start."));		
 		return;
 	}
 
@@ -60,20 +63,25 @@ void ADialogueController::StartDialogue(UDialogue* InDialogue,
 	{
 		if (Speaker == nullptr)
 		{
-
+			UE_LOG(LogDialogueRuntime, Error, TEXT("Controller : Could not start dialogue. Invalid speaker provided."));
 			return;
 		}
 
 		if (Speaker->GetDialogueName().IsNone())
 		{
-
+			UE_LOG(LogDialogueRuntime, Error, TEXT("Controller : Could not start dialogue. A provided speaker has an unfilled DialogueName."));
 			return;
 		}
 
-		
+		if (TargetSpeakers.Contains(Speaker->GetDialogueName()))
+		{
+			UE_LOG(LogDialogueRuntime, Error, TEXT("Could not start dialogue. Multiple provided speakers share a DialogueName."));
+			return;
+		}
+
 		TargetSpeakers.Add(Speaker->GetDialogueName(), Speaker);
 	}
-
+	UE_LOG(LogDialogueRuntime, Warning, TEXT("Controller : StartDialogue."));
 	StartDialogueWithNames(InDialogue, TargetSpeakers);
 }
 
@@ -85,9 +93,16 @@ void ADialogueController::EndDialogue()
 	if (CurrentDialogue)
 	{
 		//Clear any behavior flags from the speakers and stop speaking
+		for (auto& Entry : CurrentDialogue->GetAllSpeakers())
+		{
+			if (Entry.Value)
+			{
+				Entry.Value->Stop();
+				Entry.Value->ClearBehaviorFlags();
+			}
+		}
 
-
-
+		CurrentDialogue->ClearController();
 		CurrentDialogue = nullptr;
 	}
 }
@@ -96,7 +111,7 @@ void ADialogueController::Skip() const
 {
 	if (CurrentDialogue)
 	{
-
+		CurrentDialogue->Skip();
 	}
 }
 
@@ -108,12 +123,11 @@ void ADialogueController::ClearNodeVisits()
 	}
 }
 
-void ADialogueController::SetSpeaker(FName InName, 
-	UDialogueSpeakerComponent* InSpeaker)
+void ADialogueController::SetSpeaker(FName InName, UDialogueSpeakerComponent* InSpeaker)
 {
 	if (CurrentDialogue && InSpeaker)
 	{
-
+		CurrentDialogue->SetSpeaker(InName, InSpeaker);
 	}
 }
 
@@ -141,9 +155,18 @@ bool ADialogueController::SpeakerInCurrentDialogue(UDialogueSpeakerComponent* Ta
 	}
 
 	//Retrieve speakers
-
+	TMap<FName, UDialogueSpeakerComponent*> Speakers = CurrentDialogue->GetAllSpeakers();
 	TArray<FName> SpeakerRoles;
+	Speakers.GetKeys(SpeakerRoles);
 
+	//If any one speaker matches the target, true
+	for(FName NextRole : SpeakerRoles)
+	{
+		if (Speakers[NextRole] == TargetSpeaker)
+		{
+			return true;
+		}
+	}
 
 	//No speakers matched the target, false
 	return false;

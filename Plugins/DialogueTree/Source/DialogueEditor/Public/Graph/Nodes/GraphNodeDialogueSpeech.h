@@ -79,7 +79,7 @@ private:
 	USoundBase* SpeechAudio;
 	
 	UPROPERTY(EditAnywhere, Category = "SpeechContent")
-	float MinimumPlayTime = 0.f;
+	float MinimumPlayTime = 5.0f;
 	
 	UPROPERTY(EditAnywhere, Category = "SpeechContent")
 	bool bCanSkip = true;

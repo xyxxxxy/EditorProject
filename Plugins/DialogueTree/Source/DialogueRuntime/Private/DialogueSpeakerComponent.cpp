@@ -3,8 +3,8 @@
 #include "Engine/World.h"
 #include "Dialogue.h"
 #include "DialogueController.h"
-// #include "DialogueManagerSubsystem.h"
-// #include "LogDialogueTree.h"
+ #include "DialogueManagerSubsystem.h"
+ #include "DialogueRuntimeLogChannels.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueSpeakerComponent)
 
@@ -17,21 +17,15 @@ UDialogueSpeakerComponent::UDialogueSpeakerComponent()
 void UDialogueSpeakerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// UDialogueManagerSubsystem* DialogueSubsystem = 
-	// 	GetWorld()->GetSubsystem<UDialogueManagerSubsystem>();
-	// check(DialogueSubsystem);
-	//
-	// DialogueController = DialogueSubsystem->GetCurrentController();
-	// if (!DialogueController)
-	// {
-	// 	UE_LOG(
-	// 		LogDialogueTree, 
-	// 		Error, 
-	// 		TEXT("Speaker component failed to find an active dialogue controller")
-	// 	);
-	// 	return;
-	// }
+	UDialogueManagerSubsystem* DialogueSubsystem = GetWorld()->GetSubsystem<UDialogueManagerSubsystem>();
+	check(DialogueSubsystem);
+	
+	DialogueController = DialogueSubsystem->GetCurrentController();
+	if (!DialogueController)
+	{
+		UE_LOG(LogDialogueRuntime, Error, TEXT("Speaker component failed to find an active dialogue controller!"));
+		return;
+	}
 }
 
 void UDialogueSpeakerComponent::SetDisplayName(FText InDisplayName)
@@ -81,8 +75,7 @@ FGameplayTagContainer UDialogueSpeakerComponent::GetBehaviorFlags()
 
 void UDialogueSpeakerComponent::EndCurrentDialogue()
 {
-	if (!DialogueController 
-		|| !DialogueController->SpeakerInCurrentDialogue(this))
+	if (!DialogueController || !DialogueController->SpeakerInCurrentDialogue(this))
 	{
 		return;
 	}
@@ -92,8 +85,7 @@ void UDialogueSpeakerComponent::EndCurrentDialogue()
 
 void UDialogueSpeakerComponent::TrySkipSpeech()
 {
-	if (!DialogueController || 
-		!DialogueController->SpeakerInCurrentDialogue(this))
+	if (!DialogueController || !DialogueController->SpeakerInCurrentDialogue(this))
 	{
 		return;
 	}
@@ -137,22 +129,14 @@ void UDialogueSpeakerComponent::StartDialogueWithNames(UDialogue* InDialogue,
 {	 
 	if (!InDialogue)
 	{
-		// UE_LOG(
-		// 	LogDialogueTree, 
-		// 	Warning, 
-		// 	TEXT("Speaker: No valid dialogue found to start")
-		// );
+		UE_LOG(LogDialogueRuntime, Warning, TEXT("Speaker: No valid dialogue found to start!"));
 		return;
 	}
 
 	//Validate the controller
 	if (!DialogueController)
 	{
-		// UE_LOG(
-		// 	LogDialogueTree, 
-		// 	Error, 
-		// 	TEXT("Speaker could not start dialogue because dialogue controller was invalid")
-		// );
+		UE_LOG(LogDialogueRuntime, Error, TEXT("Speaker could not start dialogue because dialogue controller was invalid!"));
 		return;
 	}
 
@@ -163,25 +147,18 @@ void UDialogueSpeakerComponent::StartDialogueWithNames(UDialogue* InDialogue,
 void UDialogueSpeakerComponent::StartDialogue(UDialogue* InDialogue,
 	TArray<UDialogueSpeakerComponent*> InSpeakers)
 {
+	
 	//Validate that a dialogue was provided 
 	if (!InDialogue)
 	{
-		// UE_LOG(
-		// 	LogDialogueTree,
-		// 	Warning,
-		// 	TEXT("Speaker: No valid dialogue found to start")
-		// );
+		UE_LOG(LogDialogueRuntime, Warning, TEXT("Speaker: No valid dialogue found to start!"));
 		return;
 	}
 
 	//Validate the controller
 	if (!DialogueController)
 	{
-		// UE_LOG(
-		// 	LogDialogueTree,
-		// 	Error,
-		// 	TEXT("Speaker could not start dialogue because dialogue controller was invalid")
-		// );
+		UE_LOG(LogDialogueRuntime, Error, TEXT("Speaker could not start dialogue because dialogue controller was invalid!"));
 		return;
 	}
 
@@ -190,6 +167,8 @@ void UDialogueSpeakerComponent::StartDialogue(UDialogue* InDialogue,
 	{
 		InSpeakers.Add(this);
 	}
+
+	UE_LOG(LogDialogueRuntime, Warning, TEXT("Comp : Speaker: StartDialogue"));
 
 	DialogueController->StartDialogue(InDialogue, InSpeakers);
 }

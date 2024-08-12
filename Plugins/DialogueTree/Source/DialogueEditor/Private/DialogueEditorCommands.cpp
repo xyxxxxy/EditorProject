@@ -13,6 +13,7 @@ FDialogueEditorCommands::FDialogueEditorCommands()
 void FDialogueEditorCommands::RegisterCommands()
 {
     UI_COMMAND(CompileAsset,"Compile","Compile the Graph and Nodes",EUserInterfaceActionType::Button,FInputChord());
+    UI_COMMAND(TestAsset,"Test","Test the Editor Toolbar",EUserInterfaceActionType::Button,FInputChord());
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -26,6 +26,8 @@ void FDialogueEditorStyle::Initialize()
 	RegisterIconBrushes();
 	RegisterTextStyles();
 
+	StyleSet->Set(TEXT("PinSize"), FVector2D(15.f));
+
 	
 	FSlateStyleRegistry::RegisterSlateStyle(*StyleSet);
 	
@@ -100,5 +102,9 @@ FTextBlockStyle FDialogueEditorStyle::GetDerivativeTextStyle(FRegisterTextStyleA
 		.SetShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.7f));
 }
 
+const FVector2D FDialogueEditorStyle::GetVector(FName PropertyName, const ANSICHAR* Specifier)
+{
+	return StyleSet->GetVector(PropertyName,Specifier);
+}
 
 #undef IMAGE_BRUSH

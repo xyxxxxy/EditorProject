@@ -5,7 +5,9 @@
 #include "Graph/Nodes/GraphNodeDialogueEntry.h"
 #include "Graph/Nodes/GraphNodeDialogueSpeech.h"
 #include "Transitions/DialogueTransition.h"
+#include "Graph/DialogueTreeConnectionDrawingPolicy.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueEdGraphSchema)
 
 #define LOCTEXT_NAMESPACE "DialogueEditorSchema"
 
@@ -15,14 +17,18 @@ FConnectionDrawingPolicy* UDialogueEdGraphSchema::CreateConnectionDrawingPolicy(
 	int32 InFrontLayerID, float InZoomFactor, const FSlateRect& InClippingRect, FSlateWindowElementList& InDrawElements,
 	UEdGraph* InGraphObj) const
 {
-	return Super::CreateConnectionDrawingPolicy(InBackLayerID, InFrontLayerID, InZoomFactor, InClippingRect,
-	                                            InDrawElements, InGraphObj);
+	return new FDialogueTreeConnectionDrawingPolicy(InBackLayerID, InFrontLayerID, InZoomFactor, InClippingRect, InDrawElements);
 }
 
 void UDialogueEdGraphSchema::OnPinConnectionDoubleCicked(UEdGraphPin* PinA, UEdGraphPin* PinB,
 	const FVector2D& GraphPosition) const
 {
 	Super::OnPinConnectionDoubleCicked(PinA, PinB, GraphPosition);
+}
+
+void UDialogueEdGraphSchema::GetPinContextMenu(UToolMenu* Menu, UEdGraphPin* Pin, FText PinText) const
+{
+
 }
 
 void UDialogueEdGraphSchema::GetGraphContextActions(FGraphContextMenuBuilder& ContextMenuBuilder) const
@@ -38,7 +44,33 @@ void UDialogueEdGraphSchema::GetContextMenuActions(UToolMenu* Menu, UGraphNodeCo
 const FPinConnectionResponse UDialogueEdGraphSchema::CanCreateConnection(const UEdGraphPin* A,
 	const UEdGraphPin* B) const
 {
-	return Super::CanCreateConnection(A, B);
+
+	//Connection values to work with 
+	FConnectionArgs ConnectionArgs;
+	ConnectionArgs.PinA = A;
+	ConnectionArgs.PinB = B;
+	ConnectionArgs.NodeA = Cast<UGraphNodeDialogueBase>(A->GetOwningNode());
+	ConnectionArgs.NodeB = Cast<UGraphNodeDialogueBase>(B->GetOwningNode());
+
+	//Response to return 
+	FPinConnectionResponse Response;
+
+	//Check for disallowed connections
+	CheckForDisallowedConnection(ConnectionArgs, Response);
+
+	if (Response.Response == CONNECT_RESPONSE_DISALLOW)
+	{
+		return Response;
+	}
+
+	//Connection is allowed - either limited or unlimited
+	if (!ConnectionHasConnectionLimit(ConnectionArgs, Response))
+	{
+		//No connection limit 
+		Response.Response = CONNECT_RESPONSE_MAKE;
+		Response.Message = LOCTEXT("AllowConnection", "Connect nodes");
+	}
+	return Response;
 }
 
 void UDialogueEdGraphSchema::CreateDefaultNodesForGraph(UEdGraph& Graph) const
@@ -71,6 +103,11 @@ int32 UDialogueEdGraphSchema::GetCurrentVisualizationCacheID() const
 void UDialogueEdGraphSchema::ForceVisualizationCacheClear() const
 {
 	Super::ForceVisualizationCacheClear();
+}
+
+void UDialogueEdGraphSchema::GetNodeMenuActions(FGraphContextMenuBuilder& ContextMenuBuilder) const
+{
+
 }
 
 void UDialogueEdGraphSchema::GetSpeechNodeMenuActions(FGraphContextMenuBuilder& ContextMenuBuilder) const
@@ -147,4 +184,96 @@ TSharedPtr<FDialogueSchemaAction_NewNode> UDialogueEdGraphSchema::MakeCreateSpee
 	return NewAction;
 }
 
+void UDialogueEdGraphSchema::CheckForDisallowedConnection(const FConnectionArgs& InArgs, FPinConnectionResponse& OutResponse) const
+{
+	check(InArgs.PinA && InArgs.PinB);
+
+	//Same pin direction
+	if (InArgs.PinA->Direction == InArgs.PinB->Direction)
+	{
+		OutResponse.Response = CONNECT_RESPONSE_DISALLOW;
+		OutResponse.Message = LOCTEXT(
+			"SamePinDirConnectionError",
+			"Cannot connect two input or two output pins"
+		);
+	}
+	//Invalid or missing nodes
+	else if (!InArgs.NodeA || !InArgs.NodeB)
+	{
+		OutResponse.Response = CONNECT_RESPONSE_DISALLOW;
+		OutResponse.Message = LOCTEXT(
+			"WrongNodeTypeConnectionError",
+			"No connectable nodes found extending UGraphNodeDialogueBase"
+		);
+	}
+	//Attempting to connect to self 
+	else if (InArgs.NodeA == InArgs.NodeB)
+	{
+		OutResponse.Response = CONNECT_RESPONSE_DISALLOW;
+		OutResponse.Message = LOCTEXT(
+			"SelfConnectConnectionError",
+			"Unable to connect node to itself"
+		);
+	}
+	//Attempting to connect to direct parent 
+	else if (NodeIsDirectParent(InArgs.NodeA, InArgs.NodeB))
+	{
+		OutResponse.Response = CONNECT_RESPONSE_DISALLOW;
+		OutResponse.Message = LOCTEXT(
+			"DirectParentConnectionError",
+			"Unable to connect node to its direct parent"
+		);
+	}
+}
+
+bool UDialogueEdGraphSchema::NodeIsDirectParent(const UGraphNodeDialogueBase* NodeA, const UGraphNodeDialogueBase* NodeB) const
+{
+	check(NodeA && NodeB);
+
+	//If either node is a direct parent of the other
+	const TArray<UGraphNodeDialogueBase*> ParentNodesA = NodeA->GetDirectParents();
+	const TArray<UGraphNodeDialogueBase*> ParentNodesB = NodeB->GetDirectParents();
+
+	if (ParentNodesB.Contains(NodeA) || ParentNodesA.Contains(NodeB))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool UDialogueEdGraphSchema::ConnectionHasConnectionLimit(const FConnectionArgs& InArgs, FPinConnectionResponse& OutResponse) const
+{
+	check(InArgs.NodeA && InArgs.NodeB);
+
+	//If either node has a connection limit, respect it 
+	bool bASinglyConnectable = InArgs.NodeA->GetOutputConnectionLimit() == EDialogueConnectionLimit::Single;
+	bool bBSinglyConnectable = InArgs.NodeB->GetInputConnectionLimit() == EDialogueConnectionLimit::Single;
+
+	if (bASinglyConnectable && bBSinglyConnectable)
+	{
+		OutResponse.Response = CONNECT_RESPONSE_BREAK_OTHERS_AB;
+		OutResponse.Message = LOCTEXT(
+			"AllowConnectionABExclusive",
+			"Connect nodes"
+		);
+	}
+	else if (bASinglyConnectable)
+	{
+		OutResponse.Response = CONNECT_RESPONSE_BREAK_OTHERS_A;
+		OutResponse.Message = LOCTEXT(
+			"AllowConnectionAExclusive",
+			"Connect nodes"
+		);
+	}
+	else if (bBSinglyConnectable)
+	{
+		OutResponse.Response = CONNECT_RESPONSE_BREAK_OTHERS_B;
+		OutResponse.Message = LOCTEXT(
+			"AllowConnectionBExclusive",
+			"Connect nodes"
+		);
+	}
+
+	return bASinglyConnectable || bBSinglyConnectable;
+}
 #undef LOCTEXT_NAMESPACE

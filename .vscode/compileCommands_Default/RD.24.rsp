@@ -17,6 +17,7 @@
 /I "E:\UE\UE_5.2\Engine\Plugins\Marketplace\Developer\RiderLink\Source\RD\thirdparty\spdlog\include" 
 /I "E:\UE\UE_5.2\Engine\Plugins\Marketplace\Developer\RiderLink\Source\RD\thirdparty\clsocket\src" 
 /I "E:\UE\UE_5.2\Engine\Plugins\Marketplace\Developer\RiderLink\Source\RD\thirdparty\CTPL\include" 
+/I "E:\UE\UE_5.2\Engine\Plugins\Marketplace\Developer\RiderLink\Source\RD\thirdparty\utf-cpp\include" 
 /I "E:\UE\UE_5.2\Engine\Plugins\Marketplace\Developer\RiderLink\Source" 
 /I "E:\UE\UE_5.2\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\Core\UHT" 
 /I "E:\UE\UE_5.2\Engine\Intermediate\Build\Win64\UnrealEditor\Inc\Core\VNI" 

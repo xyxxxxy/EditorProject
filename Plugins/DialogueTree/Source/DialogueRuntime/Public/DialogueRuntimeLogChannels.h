@@ -4,4 +4,4 @@
 #include "CoreMinimal.h"
 #include "Logging/LogMacros.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogDialogueRuntime,Log,All)
+DECLARE_LOG_CATEGORY_EXTERN(LogDialogueRuntime, Log, All)

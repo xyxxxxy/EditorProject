@@ -11,4 +11,5 @@ public:
     virtual void RegisterCommands() override;
 
     TSharedPtr<FUICommandInfo> CompileAsset;
+    TSharedPtr<FUICommandInfo> TestAsset;
 };

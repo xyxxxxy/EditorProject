@@ -20,14 +20,19 @@ TSharedRef<SWidget> FDialogueViewportTabFactory::CreateTabBody(const FWorkflowTa
 {
 	TSharedPtr<FDialogueAssetEditor> EditorPtr = Editor.Pin();
 
-	TSharedPtr<SGraphEditor> GraphEditor = EditorPtr->GetGraphEditor();
+	TSharedPtr<SGraphEditor> GraphEditor;
+	SAssignNew(GraphEditor, SDialogueGraphEditor, EditorPtr)
+		.DetailsView(EditorPtr->GetNodeDetailView());
+
+	//EditorPtr->SetGraphEditor(GraphEditor);
+	
+
 	return SNew(SVerticalBox)
 				+ SVerticalBox::Slot()
 				.FillHeight(1.0f)
 				.HAlign(HAlign_Fill)
 				[
-					SAssignNew(GraphEditor,SDialogueGraphEditor, EditorPtr)
-					.DetailsView(EditorPtr->GetNodeDetailView())
+					GraphEditor.ToSharedRef()
 				];
 }
 

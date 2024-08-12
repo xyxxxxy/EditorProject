@@ -23,7 +23,7 @@ public:
 	TArray<UDialogueNode*> GetChildren() const;
 	TArray<UDialogueNode*> GetParent() const;
 	
-	virtual void EnterNode(){};
+	virtual void EnterNode();
 	virtual  void Skip(){};
 
 	int32 GetNodeIndex() const;

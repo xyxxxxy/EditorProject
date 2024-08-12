@@ -56,6 +56,22 @@
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	},
 	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Private\\DetailCustomizations\\DialogueSocketCustomizationBase.cpp",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\DialogueEditor.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Private\\DetailCustomizations\\DialogueSpeakerSocketCustomization.cpp",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\DialogueEditor.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Private\\DialogueEditorCommands.cpp",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
@@ -112,6 +128,14 @@
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	},
 	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Private\\Graph\\DialogueTreeConnectionDrawingPolicy.cpp",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\DialogueEditor.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Private\\Graph\\Nodes\\DialogueNodeFactory.cpp",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
@@ -153,6 +177,14 @@
 	},
 	{
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Private\\Graph\\Slate\\SDialogueGraphEditor.cpp",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\DialogueEditor.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Private\\Graph\\Slate\\SDialogueObjectPicker.cpp",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
 			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\DialogueEditor.22.rsp"
@@ -264,6 +296,22 @@
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	},
 	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Public\\DetailCustomizations\\DialogueSocketCustomizationBase.h",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\DialogueEditor.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Public\\DetailCustomizations\\DialogueSpeakerSocketCustomization.h",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\DialogueEditor.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Public\\DialogueEditorCommands.h",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
@@ -320,6 +368,14 @@
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	},
 	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Public\\Graph\\DialogueTreeConnectionDrawingPolicy.h",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\DialogueEditor.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Public\\Graph\\Nodes\\DialogueNodeFactory.h",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
@@ -361,6 +417,14 @@
 	},
 	{
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Public\\Graph\\Slate\\SDialogueGraphEditor.h",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\DialogueEditor.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueEditor\\Public\\Graph\\Slate\\SDialogueObjectPicker.h",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
 			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\DialogueEditor.22.rsp"
@@ -699,7 +763,7 @@
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Source\\EditorProject\\EditorProject.Build.cs",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
-			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\EditorProject.274.rsp"
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\EditorProject.275.rsp"
 		],
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	},
@@ -707,7 +771,7 @@
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Source\\EditorProject\\EditorProject.cpp",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
-			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\EditorProject.274.rsp"
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\EditorProject.275.rsp"
 		],
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	},
@@ -715,7 +779,7 @@
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Source\\EditorProject\\EditorProject.h",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
-			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\EditorProject.274.rsp"
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\EditorProject.275.rsp"
 		],
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	},
@@ -723,7 +787,7 @@
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Source\\EditorProject\\EditorProjectGameModeBase.cpp",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
-			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\EditorProject.274.rsp"
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\EditorProject.275.rsp"
 		],
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	},
@@ -731,7 +795,7 @@
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Source\\EditorProject\\EditorProjectGameModeBase.h",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
-			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\EditorProject.274.rsp"
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\EditorProject.275.rsp"
 		],
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	}

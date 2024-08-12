@@ -8,6 +8,15 @@
 struct FDialogueSchemaAction_NewNode;
 class UDialogueTransition;
 class UDialogueSpeakerSocket;
+class UGraphNodeDialogueBase;
+
+struct FConnectionArgs
+{
+	const UEdGraphPin* PinA;
+	const UEdGraphPin* PinB;
+	const UGraphNodeDialogueBase* NodeA;
+	const UGraphNodeDialogueBase* NodeB;
+};
 
 UCLASS()
 class DIALOGUEEDITOR_API UDialogueEdGraphSchema : public UEdGraphSchema
@@ -27,13 +36,21 @@ public:
 	virtual bool IsCacheVisualizationOutOfDate(int32 InVisualizationCacheID) const override;
 	virtual int32 GetCurrentVisualizationCacheID() const override;
 	virtual void ForceVisualizationCacheClear() const override;
+
+	//static TSharedPtr<FDialogueAssetEditor> GetEditor(const UEdGraph* InGraph);
 	
 private:
+	void GetPinContextMenu(UToolMenu* Menu, UEdGraphPin* Pin, FText PinText) const;
+
+	void GetNodeMenuActions(FGraphContextMenuBuilder& ContextMenuBuilder) const;
+
 	void GetSpeechNodeMenuActions(FGraphContextMenuBuilder& ContextMenuBuilder) const;
 	TSharedPtr<FDialogueSchemaAction_NewNode> MakeCreateSpeechNodeAction(UDialogueSpeakerSocket* SpeakerSocket, TSubclassOf<UDialogueTransition> TransitionType, UObject* Outer) const;
 
+	void CheckForDisallowedConnection(const FConnectionArgs& InArgs, FPinConnectionResponse& OutResponse) const;
+	bool NodeIsDirectParent(const UGraphNodeDialogueBase* NodeA, const UGraphNodeDialogueBase* NodeB) const;
+	bool ConnectionHasConnectionLimit(const FConnectionArgs& InArgs, FPinConnectionResponse& OutResponse) const;
 
-	
 private:
 	static int32 CurrentCacheRefreshID;
 };

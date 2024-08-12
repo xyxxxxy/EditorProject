@@ -48,6 +48,8 @@ public:
 	static const FTextBlockStyle& GetTextStyle(FName PropertyName,const ANSICHAR* Specifier = nullptr);
 	static FTextBlockStyle GetDerivativeTextStyle(FRegisterTextStyleArgs& InArgs);
 
+	static const FVector2D GetVector(FName PropertyName,const ANSICHAR* Specifier = nullptr);
+
 	
 private:
 	static TSharedPtr<FSlateStyleSet> StyleSet;

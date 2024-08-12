@@ -12,13 +12,12 @@ class DIALOGUEEDITOR_API FDialogueEditorToolbar : public TSharedFromThis<FDialog
 public:
 	explicit FDialogueEditorToolbar(const TSharedPtr<FDialogueAssetEditor> InAssetEditor, UToolMenu* ToolbarMenu);
 
-private:
+public:
 	void BuildAssetToolbar(UToolMenu* ToolbarMenu) const;
+	
 	FSlateIcon GetStatusImage() const;
 	FText GetLabel() const;
-	//TSharedRef<SWidget> MakeDiffMenu() const;
-	
-	//void BuildDebuggerToolbar(UToolMenu* ToolbarMenu) const;
+	FText GetToolTip() const;
 
 private:
 	TWeakPtr<FDialogueAssetEditor> Editor;

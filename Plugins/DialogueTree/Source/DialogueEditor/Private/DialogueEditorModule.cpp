@@ -7,6 +7,8 @@
 #include "DetailCustomizations/DialogueGraphCustomization.h"
 #include "Graph/DialogueEdGraph.h"
 #include "Graph/Nodes/DialogueNodeFactory.h"
+#include "DialogueSpeakerSocket.h"
+#include "DetailCustomizations/DialogueSpeakerSocketCustomization.h"
 
 #define LOCTEXT_NAMESPACE "FDialogueEditorModule"
 
@@ -25,6 +27,8 @@ void FDialogueEditorModule::ShutdownModule()
 	FDialogueEditorStyle::ShutDown();
 
 	UnRegisterNodeFactory();
+	UnRegisterAssets();
+	UnRegisterDetailCustomizations();
 }
 
 void FDialogueEditorModule::RegisterAssets()
@@ -63,27 +67,71 @@ void FDialogueEditorModule::RegisterDetailCustomizations()
 	{
 		FPropertyEditorModule& PropertyModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
 
-		RegisterCustomClassLayout(UDialogueEdGraph::StaticClass(),FOnGetDetailCustomizationInstance::CreateStatic(FDialogueGraphCustomization::MakeInstance));
+		RegisterCustomClassLayout(UDialogueEdGraph::StaticClass(), FOnGetDetailCustomizationInstance::CreateStatic(FDialogueGraphCustomization::MakeInstance));
+		RegisterCustomStructLayoutForClass(UDialogueSpeakerSocket::StaticClass(), FOnGetPropertyTypeCustomizationInstance::CreateStatic(FDialogueSpeakerSocketCustomization::MakeInstance));
 		
+		PropertyModule.NotifyCustomizationModuleChanged();
 	}
 }
 
 void FDialogueEditorModule::UnRegisterDetailCustomizations()
 {
+	if(FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
+	{
+		FPropertyEditorModule& PropertyModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
+
+		for (auto It = CustomClassLayouts.CreateConstIterator(); It; ++It)
+		{
+			if (It->IsValid())
+			{
+				PropertyModule.UnregisterCustomClassLayout(*It);
+			}
+		}
+
+		for (auto It = CustomStructLayouts.CreateConstIterator(); It; ++It)
+		{
+			if (It->IsValid())
+			{
+				PropertyModule.UnregisterCustomPropertyTypeLayout(*It);
+			}
+		}		
+		
+		PropertyModule.NotifyCustomizationModuleChanged();
+	}	
 }
 
-void FDialogueEditorModule::RegisterCustomClassLayout(const TSubclassOf<UObject> Class,
-	const FOnGetDetailCustomizationInstance DetailLayout)
+void FDialogueEditorModule::RegisterCustomClassLayout(const TSubclassOf<UObject> Class, const FOnGetDetailCustomizationInstance DetailLayout)
 {
 	if(Class)
 	{
 		FPropertyEditorModule& PropertyModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
-		PropertyModule.RegisterCustomClassLayout(Class->GetFName(),DetailLayout);
+		PropertyModule.RegisterCustomClassLayout(Class->GetFName(), DetailLayout);
 
 		CustomClassLayouts.Add(Class->GetFName());
 	}
 }
 
+void FDialogueEditorModule::RegisterCustomStructLayoutForStruct(const UScriptStruct& Struct, const FOnGetPropertyTypeCustomizationInstance DetailLayout)
+{
+	if (FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
+	{
+		FPropertyEditorModule& PropertyModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
+		PropertyModule.RegisterCustomPropertyTypeLayout(Struct.GetFName(), DetailLayout);
+
+		CustomStructLayouts.Add(Struct.GetFName());
+	}	
+}
+
+void FDialogueEditorModule::RegisterCustomStructLayoutForClass(const TSubclassOf<UObject> Class, const FOnGetPropertyTypeCustomizationInstance DetailLayout)
+{
+	if (FModuleManager::Get().IsModuleLoaded("PropertyEditor"))
+	{
+		FPropertyEditorModule& PropertyModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
+		PropertyModule.RegisterCustomPropertyTypeLayout(Class->GetFName(), DetailLayout);
+
+		CustomStructLayouts.Add(Class->GetFName());
+	}		
+}
 
 #undef LOCTEXT_NAMESPACE
 	

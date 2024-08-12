@@ -60,12 +60,13 @@ void UDialogue::AddSpeakerEntry(FName InName)
 void UDialogue::OpenDialogue(ADialogueController* InController, TMap<FName, UDialogueSpeakerComponent*> InSpeakers)
 {
 	FString ErrorMessage;
-	if(!CanPlay(InController,ErrorMessage))
+	if(!CanPlay(InController, ErrorMessage))
 	{
-		UE_LOG(LogDialogueRuntime,Error,TEXT("Cannot play Dialogue. %s"),*ErrorMessage);
+		UE_LOG(LogDialogueRuntime, Error, TEXT("Cannot play Dialogue. %s"), *ErrorMessage);
 		return;
 	}
 
+	UE_LOG(LogDialogueRuntime, Warning, TEXT("Dialogue : OpenDialogue."));
 	DialogueController = InController;
 	FillSpeakers(InSpeakers);
 	TraverseNode(RootNode);

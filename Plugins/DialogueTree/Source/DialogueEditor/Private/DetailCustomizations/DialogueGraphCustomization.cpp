@@ -33,7 +33,7 @@ void FDialogueGraphCustomization::CustomizeDetails(IDetailLayoutBuilder& DetailB
 	FAddPropertyParams AddParams;
 	AddParams.HideRootObjectNode(true);
 
-	CategoryBuilder.AddExternalObjects(TArray<UObject*>{TargetDialogue},EPropertyLocation::Default,AddParams);
+	CategoryBuilder.AddExternalObjects(TArray<UObject*>{TargetDialogue}, EPropertyLocation::Default, AddParams);
 }
 
 TSharedRef<IDetailCustomization> FDialogueGraphCustomization::MakeInstance()

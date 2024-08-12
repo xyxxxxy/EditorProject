@@ -3,6 +3,7 @@
 #include "Asset/DialogueAssetEditor.h"
 #include "Dialogue.h"
 #include "Tabs/DialogueEditorTabs.h"
+#include "EdGraph/EdGraph.h"
 
 #define LOCTEXT_NAMESPACE "DialoguePropertiesTabFactory"
 
@@ -10,9 +11,9 @@ FDialoguePropertiesTabFactory::FDialoguePropertiesTabFactory(TSharedPtr<FDialogu
 :FWorkflowTabFactory(FDialogueEditorTabs::GraphPropertiesTabID,InEditor)
 {
 	Editor = InEditor;
-	TabLabel = LOCTEXT("DialoguePropertiesTabLabel","Properties");
-	ViewMenuDescription = LOCTEXT("DialoguePropertiesViewMenuDescription","Display the Properties view for current dialogue asset.");
-	ViewMenuTooltip = LOCTEXT("DialoguePropertiesViewMenuTooltip","Show the Properties view.");
+	TabLabel = LOCTEXT("DialoguePropertiesTabLabel", "Properties");
+	ViewMenuDescription = LOCTEXT("DialoguePropertiesViewMenuDescription", "Display the Properties view for current dialogue asset.");
+	ViewMenuTooltip = LOCTEXT("DialoguePropertiesViewMenuTooltip", "Show the Properties view.");
 }
 
 TSharedRef<SWidget> FDialoguePropertiesTabFactory::CreateTabBody(const FWorkflowTabSpawnInfo& Info) const
@@ -23,19 +24,15 @@ TSharedRef<SWidget> FDialoguePropertiesTabFactory::CreateTabBody(const FWorkflow
 	FDetailsViewArgs DetailsViewArgs;
 	{
 		DetailsViewArgs.bAllowSearch = false;
-		DetailsViewArgs.bHideSelectionTip = true;
-		DetailsViewArgs.bLockable = false;
 		DetailsViewArgs.bSearchInitialKeyFocus = true;
-		DetailsViewArgs.bUpdatesFromSelection = false;
-		DetailsViewArgs.NotifyHook = nullptr;
+		DetailsViewArgs.bHideSelectionTip = true;
+		DetailsViewArgs.NotifyHook = EditorPtr.Get();
 		DetailsViewArgs.bShowOptions = true;
-		DetailsViewArgs.bShowModifiedPropertiesOption = false;
-		DetailsViewArgs.bShowScrollBar = false;
 	}
 
 	TSharedPtr<IDetailsView> DetailsView = PropertyEditorModule.CreateDetailView(DetailsViewArgs);
-	
-	DetailsView->SetObject(EditorPtr->GetGraph());
+	check(EditorPtr->GetDialogue()->GetGraph());
+	DetailsView->SetObject(EditorPtr->GetDialogue()->GetGraph());
 
 	return SNew(SVerticalBox)
 				+ SVerticalBox::Slot()
@@ -48,7 +45,7 @@ TSharedRef<SWidget> FDialoguePropertiesTabFactory::CreateTabBody(const FWorkflow
 
 FText FDialoguePropertiesTabFactory::GetTabToolTipText(const FWorkflowTabSpawnInfo& Info) const
 {
-	return LOCTEXT("DialoguePropertiesTabToolTipText","The Properties view for doing properties thing.");
+	return LOCTEXT("DialoguePropertiesTabToolTipText", "The Properties view for doing properties thing.");
 }
 
 #undef LOCTEXT_NAMESPACE

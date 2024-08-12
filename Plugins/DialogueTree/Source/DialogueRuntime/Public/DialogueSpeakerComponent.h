@@ -34,8 +34,7 @@ struct DIALOGUERUNTIME_API FSpeakerActorEntry
 };
 
 
-UCLASS( Abstract, Blueprintable, ClassGroup=(Custom), 
-	meta=(BlueprintSpawnableComponent) )
+UCLASS(BlueprintType, Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DIALOGUERUNTIME_API UDialogueSpeakerComponent : public UAudioComponent
 {
 	GENERATED_BODY()

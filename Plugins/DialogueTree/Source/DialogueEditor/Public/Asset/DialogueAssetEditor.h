@@ -16,8 +16,11 @@ public:
 	UDialogue* GetDialogue() const;
 
 	void CreateGraph();
+
+	void SetGraph(UEdGraph* InGraph);
 	UEdGraph* GetGraph() const;
 
+	void SetGraphEditor(TSharedPtr<SGraphEditor> InGraphEditor);
 	TSharedPtr<SGraphEditor> GetGraphEditor() const;
 
 public:
@@ -49,11 +52,8 @@ public:
 	
 	void OnFinishedChangingProperties(const FPropertyChangedEvent& PropertyChangedEvent);
 	
-	FSlateIcon GetStatusImage() const;
-	
 	void OnCompile();
 	
-	void RegisterCommands();
 	
 
 	
@@ -65,7 +65,7 @@ private:
 
 	TSharedPtr<IDetailsView> NodeDetailsView;
 
-	TSharedPtr<SGraphEditor> GraphEditor;
+	TWeakPtr<SGraphEditor> GraphEditor;
 
 	TSharedPtr<FUICommandList> ToolKitCommands;
 	TSharedPtr<FDialogueEditorToolbar> AssetToolbar;
