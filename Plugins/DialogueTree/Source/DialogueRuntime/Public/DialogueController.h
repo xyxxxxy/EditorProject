@@ -5,11 +5,13 @@
 #include "GameFramework/Actor.h"
 #include "Dialogue.h"
 #include "SpeechDetails.h"
+
+
 #include "DialogueController.generated.h"
 
 class UDialogue;
 class UDialogueSpeakerComponent;
-
+class UDialogueWidget;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDialogueControllerDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDialogueControllerSpeechDelegate, FSpeechDetails, SpeechDetails);
 
@@ -83,30 +85,43 @@ public:
 	void ClearAllNodeVisitsForDialogue(UDialogue* TargetDialogue);
 	bool WasNodeVisited(const UDialogue* TargetDialogue, int32 TargetNodeIndex) const;
 
+	UDialogue* GetDialogue() const;
+
 public:
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Dialogue")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Dialogue")
 	void OpenDisplay();
 	
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable,Category = "Dialogue")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Dialogue")
 	void CloseDisplay();
 	
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Dialogue")
 	void DisplaySpeech(FSpeechDetails InSpeechDetails, UDialogueSpeakerComponent* InSpeaker);
 	
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintNativeEvent, Category = "Dialogue")
 	void DisplayOptions(const TArray<FSpeechDetails>& InOptions);
 	
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Dialogue")
 	bool CanOpenDisplay() const;
 	
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintNativeEvent)
 	void HandleMissingSpeaker(const FName& MissingName);
+
+	void TransitionOut();
+
+	UFUNCTION(BlueprintCallable, Category = "Dialogue")
+	void SetWidget(UUserWidget* InWidget);
+
+	UFUNCTION(BlueprintPure, Category = "Dialogue")
+	UDialogueWidget* GetWidget() const;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Dialogue")
-	UDialogue* CurrentDialogue = nullptr;
+	TObjectPtr<UDialogue> CurrentDialogue;
 
 private:
+	UPROPERTY()
+	TObjectPtr<UDialogueWidget> DialogueWidgetInstance;
+
 	FDialogueRecords DialogueRecords;
 
 public:

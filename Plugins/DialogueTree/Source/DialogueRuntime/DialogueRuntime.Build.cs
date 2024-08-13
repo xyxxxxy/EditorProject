@@ -29,7 +29,10 @@ public class DialogueRuntime : ModuleRules
 				"CoreUObject",
 				"UMG",
 				"GameplayTags",
-				"DeveloperSettings"
+				"DeveloperSettings",
+				"CommonUI",
+				"CommonInput",
+				"CommonUIEditor"
 				// ... add other public dependencies that you statically link with here ...
 			}
 		);
@@ -42,7 +45,10 @@ public class DialogueRuntime : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"GameplayTags"
+				"GameplayTags",
+				"CommonUI",
+				"CommonInput",
+				"CommonUIEditor"
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);

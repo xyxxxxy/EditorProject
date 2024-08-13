@@ -14,6 +14,7 @@ void UDialogueEntryNode::EnterNode()
 	{
 		UE_LOG(LogDialogueRuntime,Warning,TEXT("Exiting dialogue: Entry node has no children..."));
 		Dialogue->EndDialogue();
+		return;
 	}
 	Dialogue->TraverseNode(Children[0]);
 }

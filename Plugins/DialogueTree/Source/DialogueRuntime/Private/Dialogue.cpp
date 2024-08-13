@@ -62,7 +62,7 @@ void UDialogue::OpenDialogue(ADialogueController* InController, TMap<FName, UDia
 	FString ErrorMessage;
 	if(!CanPlay(InController, ErrorMessage))
 	{
-		UE_LOG(LogDialogueRuntime, Error, TEXT("Cannot play Dialogue. %s"), *ErrorMessage);
+		UE_LOG(LogDialogueRuntime, Error, TEXT("Dialogue : Cannot play Dialogue. %s"), *ErrorMessage);
 		return;
 	}
 
@@ -250,7 +250,7 @@ void UDialogue::PostCompileDialogue()
 void UDialogue::SetCompileStatus(EDialogueCompileStatus InStatus)
 {
 	CompileStatus = InStatus;
-	//MarkPackageDirty(); //need to save
+	MarkPackageDirty(); //need to save
 }
 #endif
 
@@ -368,4 +368,9 @@ void UDialogue::FillSpeakers(TMap<FName, UDialogueSpeakerComponent*> InSpeakers)
 			DialogueController->HandleMissingSpeaker(Entry.Key);
 		}
 	}
+}
+
+UDialogueNode* UDialogue::GetActiveNode() const
+{
+	return ActiveNode;
 }

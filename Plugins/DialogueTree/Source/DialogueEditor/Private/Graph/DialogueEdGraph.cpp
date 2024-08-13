@@ -1,6 +1,7 @@
 ﻿
 #include "Graph/DialogueEdGraph.h"
 #include "Graph/Nodes/GraphNodeDialogue.h"
+#include "Graph/Nodes/GraphNodeDialogueEntry.h"
 #include "Dialogue.h"
 #include "GraphEditAction.h"
 
@@ -186,6 +187,7 @@ void UDialogueEdGraph::CreateAssetNodes(UDialogue* InAsset)
 	for (auto& Entry : NodeMap)
 	{
 		check(Entry.Value);
+		if(Entry.Value->IsA<UGraphNodeDialogueEntry>())continue;
 		Entry.Value->CreateAssetNode(InAsset);
 	}
 }

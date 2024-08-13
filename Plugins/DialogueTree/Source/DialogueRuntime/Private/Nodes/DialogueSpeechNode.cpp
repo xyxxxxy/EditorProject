@@ -39,8 +39,7 @@ void UDialogueSpeechNode::EnterNode()
 		UE_LOG(
 			LogDialogueRuntime,
 			Error,
-			TEXT("Terminating dialogue early: A participant speaker component was not found."
-		" Verify that the dialogue name property matches the speaker's role in the dialogue.")
+			TEXT("Terminating dialogue early: A participant speaker component was not found. Verify that the dialogue name property matches the speaker's role in the dialogue.")
 		);
 		Dialogue->EndDialogue();
 		return;
@@ -55,14 +54,13 @@ void UDialogueSpeechNode::EnterNode()
 	
 	if (!Transition)
 	{
-		UE_LOG(LogDialogueRuntime, Error, TEXT("Speech node is missing transition.")
-		);
+		UE_LOG(LogDialogueRuntime, Error, TEXT("Speech node is missing transition."));
 		Dialogue->EndDialogue();
 		return; 
 	}
 	
 	//Play the transition 
-	Transition->StartTransition();
+	Transition->PreTransition();
 }
 
 FDialogueOption UDialogueSpeechNode::GetAsOption()
@@ -85,4 +83,9 @@ void UDialogueSpeechNode::Skip()
 
 void UDialogueSpeechNode::StartAudio()
 {
+}
+
+UDialogueTransition* UDialogueSpeechNode::GetTransition() const
+{
+	return Transition;
 }

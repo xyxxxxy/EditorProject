@@ -1,16 +1,20 @@
 ﻿
 #include "UI/DialogueWidget.h"
-
 #include "Components/RichTextBlock.h"
+#include "DialogueRuntimeLogChannels.h"
 
-static FString Suffix = FString(TEXT("</>"));
+#include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueWidget)
+
+const static FString Suffix = FString(TEXT("</>"));
 
 void UDialogueWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	OnStateStart.AddDynamic(this, &UDialogueWidget::StartNewState);
+	OnCurrentStateEnd.AddDynamic(this, &UDialogueWidget::PreSwitchToNextState);
+
 	OriginStr = OriginText.ToString();
-	GetWorld()->GetTimerManager().UnPauseTimer(DisplayTextTimerHandle);
 }
 
 void UDialogueWidget::NativeOnInitialized()
@@ -18,9 +22,6 @@ void UDialogueWidget::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	DisplayTextTimerDelegate.BindUObject(this,&UDialogueWidget::DisplayDialogue);
-	
-	GetWorld()->GetTimerManager().PauseTimer(DisplayTextTimerHandle);
-	GetWorld()->GetTimerManager().SetTimer(DisplayTextTimerHandle,DisplayTextTimerDelegate,DisplayRate,true);
 }
 
 void UDialogueWidget::NativeDestruct()
@@ -31,11 +32,15 @@ void UDialogueWidget::NativeDestruct()
 	DisplayTextTimerDelegate.Unbind();
 }
 
+
 void UDialogueWidget::DisplayDialogue()
 {
 	if(StrIndex >= OriginStr.Len())
 	{
-		EndDialogue();
+		UE_LOG(LogDialogueRuntime, Warning , TEXT("Widget : StrIndex >= OriginStr.Len()!"));
+		OnCurrentStateEnd.Broadcast();
+		//PreSwitchToNextState();
+		//EndDialogue();
 		return;
 	}
 
@@ -92,11 +97,6 @@ void UDialogueWidget::DisplayDialogue()
 
 void UDialogueWidget::EndDialogue()
 {
-	bIsEnd = true;
-	CurrentStr.Empty();
-	OriginStr.Empty();
-	StrIndex = 0;
-	bHasEntered = false;
 	GetWorld()->GetTimerManager().PauseTimer(DisplayTextTimerHandle);
 }
 
@@ -112,4 +112,54 @@ void UDialogueWidget::FindFirstIndexAfterRich()
 void UDialogueWidget::SetDisplayRate(float InRate)
 {
 	DisplayRate = InRate;
+}
+
+void UDialogueWidget::StartNewState(FSpeechDetails InDetails)
+{
+	OriginText = InDetails.SpeechText;
+	OriginStr = OriginText.ToString();
+	//DisplayRate = InDetails.
+	GetWorld()->GetTimerManager().SetTimer(DisplayTextTimerHandle, DisplayTextTimerDelegate, DisplayRate, true);
+}
+
+void UDialogueWidget::PreSwitchToNextState()
+{
+	CurrentStr.Empty();
+	OriginStr.Empty();
+	StrIndex = 0;
+	bHasEntered = false;
+	bEntireState = false;
+	GetWorld()->GetTimerManager().ClearTimer(DisplayTextTimerHandle);
+}
+
+void UDialogueWidget::DisplayEntireState()
+{
+	GetWorld()->GetTimerManager().PauseTimer(DisplayTextTimerHandle);
+	DialogueTextBlock->SetText(OriginText);
+	PreSwitchToNextState();
+}
+
+void UDialogueWidget::SetController(ADialogueController* InDialogueController)
+{
+	check(InDialogueController);
+	DialogueController = InDialogueController;
+}
+
+void UDialogueWidget::OnSwitchToNextState()
+{
+	check(DialogueController);
+	DialogueController->TransitionOut();
+}
+
+void UDialogueWidget::OnButtonClicked()
+{
+	if(bEntireState)
+	{
+		OnSwitchToNextState();
+	}
+	else
+	{
+		DisplayEntireState();
+	}
+	
 }

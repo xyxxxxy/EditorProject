@@ -17,6 +17,7 @@ FText UAutoDialogueTransition::GetNodeCreationTooltip() const
 
 void UAutoDialogueTransition::TransitionOut()
 {
+	Super::TransitionOut();
 	TArray<UDialogueNode*> Children = OwningNode->GetChildren();
 	if (!Children.IsEmpty() && Children[0])
 	{

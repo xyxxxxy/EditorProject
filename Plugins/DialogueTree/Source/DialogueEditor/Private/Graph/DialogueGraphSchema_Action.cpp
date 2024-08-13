@@ -3,6 +3,7 @@
 #include "Graph/Nodes/GraphNodeDialogue.h"
 #include "Settings/EditorStyleSettings.h"
 
+#include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueGraphSchema_Action)
 
 #define LOCTEXT_NAMESPACE "DialogueEditorSchemaAction"
 

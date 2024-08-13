@@ -138,7 +138,10 @@ private:
 	
 	bool CanPlay(ADialogueController* InController, FString& OutErrorMessage) const;
 	void FillSpeakers(TMap<FName, UDialogueSpeakerComponent*> InSpeakers);
-	
+
+public:
+	UDialogueNode* GetActiveNode() const;
+
 private:
 	UPROPERTY(EditAnywhere, NoClear, Category = "Dialogue", meta=(NoResetToDefault))
 	TMap<FName, FSpeakerField> SpeakerRoles;

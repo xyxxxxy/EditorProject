@@ -77,7 +77,7 @@ void FDialogueAssetEditor::CreateGraph()
 
 		Dialogue->SetGraph(Graph);
 		Dialogue->GetGraph()->bAllowDeletion = false;
-		
+		UE_LOG(LogDialogueEditor, Warning, TEXT("AssetEditor : SpawnInitialNodes!"));
 		SpawnInitialNodes();
 	}
 
@@ -185,9 +185,7 @@ void FDialogueAssetEditor::SpawnInitialNodes()
 {
 	const UEdGraphSchema* GraphSchema = Graph->GetSchema();
 	check(GraphSchema);
-	GraphSchema->CreateDefaultNodesForGraph(
-		*Graph
-	);
+	GraphSchema->CreateDefaultNodesForGraph(*Graph);
 }
 
 void FDialogueAssetEditor::CreateToolbar()

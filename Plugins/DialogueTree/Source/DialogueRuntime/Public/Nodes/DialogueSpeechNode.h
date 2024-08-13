@@ -23,6 +23,8 @@ public:
 	virtual void SelectOption(int32 InOptionIndex) override;
 	virtual void Skip() override;
 
+	UDialogueTransition* GetTransition() const;
+
 private:
 	void StartAudio();
 
@@ -31,5 +33,5 @@ private:
 	FSpeechDetails Details;
 	
 	UPROPERTY()
-	UDialogueTransition* Transition = nullptr;
+	TObjectPtr<UDialogueTransition> Transition;
 };

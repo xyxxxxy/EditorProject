@@ -116,6 +116,7 @@ void UGraphNodeDialogue::InitNodeInDialogueGraph(UEdGraph* OwningGraph)
 	
 	//Set the ID
 	ID = FName(IDText.ToString());
+	//Add node to map
 	DialogueGraph->AddToNodeMap(this);
 }
 
@@ -192,7 +193,7 @@ void UGraphNodeDialogue::ClearAssetNode()
 void UGraphNodeDialogue::GetParents(TArray<UGraphNodeDialogue*>& OutNodes) const
 {
 	OutNodes.Empty();
-	GetChildren_Internal(GetDirectChildren(), OutNodes);
+	GetParents_Internal(GetDirectParents(), OutNodes);
 }
 
 void UGraphNodeDialogue::GetChildren(TArray<UGraphNodeDialogue*>& OutNodes) const

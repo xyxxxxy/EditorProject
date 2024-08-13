@@ -102,7 +102,7 @@ protected:
 	FName DialogueName;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
-	UDialogue* OwnedDialogue;
+	TObjectPtr<UDialogue> OwnedDialogue;
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Dialogue", meta = (AllowPrivateAccess = true))
 	FGameplayTagContainer BehaviorFlags;

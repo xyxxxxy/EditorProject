@@ -5,6 +5,9 @@
 #include "GameFramework/Actor.h"
 #include "UObject/UObjectIterator.h"
 #include "DialogueRuntimeLogChannels.h"
+#include "Nodes/DialogueSpeechNode.h"
+#include "Transitions/DialogueTransition.h"
+#include "UI/DialogueWidget.h"
 
 ADialogueController::ADialogueController()
 {
@@ -38,6 +41,7 @@ void ADialogueController::StartDialogueWithNames(UDialogue* InDialogue, TMap<FNa
 
 	if (!CanOpenDisplay())
 	{
+		UE_LOG(LogDialogueRuntime, Warning, TEXT("Controller : Can not open Dialogue Widget."));
 		return;
 	}
 
@@ -248,3 +252,54 @@ bool ADialogueController::WasNodeVisited(const UDialogue* TargetDialogue, int32 
 
 	return TargetRecord.VisitedNodeIndices.Contains(TargetNodeIndex);
 }
+
+bool ADialogueController::CanOpenDisplay_Implementation() const
+{
+	return true;
+}
+
+UDialogue* ADialogueController::GetDialogue() const
+{
+	return CurrentDialogue;
+}
+
+void ADialogueController::TransitionOut()
+{
+	UDialogueNode* DialogueNode = CurrentDialogue->GetActiveNode();
+	check(DialogueNode);
+	if(UDialogueSpeechNode* SpeechNode = Cast<UDialogueSpeechNode>(DialogueNode))
+	{
+		if(UDialogueTransition* Transition = SpeechNode->GetTransition())
+		{
+			Transition->TryTransitionOut();
+		}
+	}
+}
+
+void ADialogueController::DisplaySpeech_Implementation(FSpeechDetails InSpeechDetails, UDialogueSpeakerComponent* InSpeaker)
+{
+	check(DialogueWidgetInstance);
+	DialogueWidgetInstance->OnStateStart.Broadcast(InSpeechDetails);
+
+}
+
+void ADialogueController::SetWidget(UUserWidget* InWidget)
+{
+	if(UDialogueWidget* Widget = Cast<UDialogueWidget>(InWidget))
+	{
+		DialogueWidgetInstance = Widget;
+	}
+}
+
+UDialogueWidget* ADialogueController::GetWidget() const
+{
+	return DialogueWidgetInstance;
+}
+
+void ADialogueController::OpenDisplay_Implementation(){}
+
+void ADialogueController::CloseDisplay_Implementation(){}
+
+void ADialogueController::DisplayOptions_Implementation(const TArray<FSpeechDetails>& InOptions){}
+
+void ADialogueController::HandleMissingSpeaker_Implementation(const FName& MissingName){}
