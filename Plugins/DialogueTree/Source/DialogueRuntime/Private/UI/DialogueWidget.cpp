@@ -128,7 +128,7 @@ void UDialogueWidget::PreSwitchToNextState()
 	OriginStr.Empty();
 	StrIndex = 0;
 	bHasEntered = false;
-	bEntireState = false;
+	bEntireState = true;
 	GetWorld()->GetTimerManager().ClearTimer(DisplayTextTimerHandle);
 }
 
@@ -149,6 +149,7 @@ void UDialogueWidget::OnSwitchToNextState()
 {
 	check(DialogueController);
 	DialogueController->TransitionOut();
+	bEntireState = false;
 }
 
 void UDialogueWidget::OnButtonClicked()

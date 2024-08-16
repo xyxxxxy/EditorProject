@@ -7,6 +7,11 @@
 /Intermediate
 /Platforms
 /Saved
-/Script
+/Plugins/CommonGame/Intermediate
+/Plugins/CommonUI/Content
+/Plugins/CommonUI/Intermediate
+/Plugins/CommonUser/Intermediate
 /Plugins/DialogueTree/Content
 /Plugins/DialogueTree/Intermediate
+/Plugins/GameplayMessageRouter/Intermediate
+/Plugins/ModularGameplayActors/Intermediate

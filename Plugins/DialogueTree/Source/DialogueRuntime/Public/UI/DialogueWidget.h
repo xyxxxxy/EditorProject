@@ -29,7 +29,7 @@ public:
 	FText OriginText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
-	float DisplayRate = 0.2f;
+	float DisplayRate = 1.0f;
 	
 	UPROPERTY(BlueprintAssignable, Category = "Dialogue")
 	FOnStateStart OnStateStart;
@@ -56,9 +56,13 @@ private:
 	UFUNCTION()
 	void StartNewState(FSpeechDetails InDetails);
 	
+	UFUNCTION()
 	void PreSwitchToNextState();
+
 	void OnSwitchToNextState();
+
 	void DisplayEntireState();
+
 	void DisplayDialogue();
 	void EndDialogue();
 	void FindFirstIndexAfterRich();
