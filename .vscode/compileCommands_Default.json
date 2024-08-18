@@ -2104,6 +2104,14 @@
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	},
 	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueRuntime\\Private\\DialogueInterface.cpp",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_Default\\DialogueRuntime.49.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueRuntime\\Private\\DialogueManagerSubsystem.cpp",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
@@ -2225,6 +2233,14 @@
 	},
 	{
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueRuntime\\Public\\DialogueController.h",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_Default\\DialogueRuntime.49.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\DialogueTree\\Source\\DialogueRuntime\\Public\\DialogueInterface.h",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
 			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_Default\\DialogueRuntime.49.rsp"

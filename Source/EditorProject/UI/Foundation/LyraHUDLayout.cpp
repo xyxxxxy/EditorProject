@@ -22,7 +22,7 @@ void ULyraHUDLayout::NativeOnInitialized()
 	BackHandle = RegisterUIActionBinding(FBindUIActionArgs(BackInputActionData,true,FSimpleDelegate::CreateUObject(this,&ULyraHUDLayout::Back)));
 
 	constexpr bool bShouldDisplayInActionBar = false;
-	RegisterUIActionBinding(FBindUIActionArgs(FUIActionTag::ConvertChecked(LyraTag::UI_Action_MainMenu), bShouldDisplayInActionBar, FSimpleDelegate::CreateUObject(this, &ThisClass::HandleMainMenuAction)));
+//	RegisterUIActionBinding(FBindUIActionArgs(FUIActionTag::ConvertChecked(LyraTag::UI_Action_MainMenu), bShouldDisplayInActionBar, FSimpleDelegate::CreateUObject(this, &ThisClass::HandleMainMenuAction)));
 }
 
 
@@ -30,7 +30,7 @@ void ULyraHUDLayout::HandleMainMenuAction()
 {
 	if (ensure(!MainMenuClass.IsNull()))
 	{
-		UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(GetOwningLocalPlayer(), LyraTag::UI_Layer_Menu, MainMenuClass);
+//		UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(GetOwningLocalPlayer(), LyraTag::UI_Layer_Menu, MainMenuClass);
 	}
 }
 

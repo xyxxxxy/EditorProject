@@ -2,10 +2,40 @@
 #include "UI/DialogueWidget.h"
 #include "Components/RichTextBlock.h"
 #include "DialogueRuntimeLogChannels.h"
+#include "Input/CommonUIInputTypes.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueWidget)
 
 const static FString Suffix = FString(TEXT("</>"));
+
+UDialogueWidget::UDialogueWidget(const FObjectInitializer& ObjectInitializer)
+ : Super(ObjectInitializer)
+{
+}
+
+TOptional<FUIInputConfig> UDialogueWidget::GetDesiredInputConfig() const
+{
+	FUIInputConfig ConfigOverride;
+
+	switch (InputMode)
+	{
+	case EDialogueWidgetInputMode::Game:
+		ConfigOverride = FUIInputConfig(ECommonInputMode::Game, EMouseCaptureMode::CapturePermanently_IncludingInitialMouseDown);
+		break;
+	case EDialogueWidgetInputMode::GameAndMenu:
+		ConfigOverride = FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::CaptureDuringMouseDown);
+		break;
+	case EDialogueWidgetInputMode::Menu:
+		ConfigOverride = FUIInputConfig(ECommonInputMode::Menu, EMouseCaptureMode::NoCapture);
+		break;
+	case EDialogueWidgetInputMode::Default:
+	default:
+		// By default, no input change is desired, return an empty config
+		return TOptional<FUIInputConfig>();
+	}
+
+	return ConfigOverride;	
+}
 
 void UDialogueWidget::NativeConstruct()
 {
@@ -22,6 +52,9 @@ void UDialogueWidget::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	DisplayTextTimerDelegate.BindUObject(this,&UDialogueWidget::DisplayDialogue);
+
+	ForwardHandle = RegisterUIActionBinding(FBindUIActionArgs(ForwardInputActionData,true,FSimpleDelegate::CreateUObject(this,&ThisClass::Forward)));
+	BackHandle = RegisterUIActionBinding(FBindUIActionArgs(BackInputActionData,true,FSimpleDelegate::CreateUObject(this,&ThisClass::Back)));
 }
 
 void UDialogueWidget::NativeDestruct()
@@ -139,12 +172,6 @@ void UDialogueWidget::DisplayEntireState()
 	PreSwitchToNextState();
 }
 
-void UDialogueWidget::SetController(ADialogueController* InDialogueController)
-{
-	check(InDialogueController);
-	DialogueController = InDialogueController;
-}
-
 void UDialogueWidget::OnSwitchToNextState()
 {
 	check(DialogueController);
@@ -152,7 +179,7 @@ void UDialogueWidget::OnSwitchToNextState()
 	bEntireState = false;
 }
 
-void UDialogueWidget::OnButtonClicked()
+void UDialogueWidget::Forward()
 {
 	if(bEntireState)
 	{
@@ -162,5 +189,19 @@ void UDialogueWidget::OnButtonClicked()
 	{
 		DisplayEntireState();
 	}
-	
+}
+
+void UDialogueWidget::SetController_Implementation(ADialogueController* InController)
+{
+	check(InController);
+	DialogueController = InController;
+}
+
+void UDialogueWidget::NativeOnActivated()
+{
+}
+
+void UDialogueWidget::Back()
+{
+	DeactivateWidget();
 }

@@ -12,8 +12,12 @@
 class UDialogue;
 class UDialogueSpeakerComponent;
 class UDialogueWidget;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDialogueControllerDelegate);
+class UCommonActivatableWidget;
+
+typedef const TMap<FName, UDialogueSpeakerComponent*>& Speakers;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDialogueControllerSpeechDelegate, FSpeechDetails, SpeechDetails);
+DECLARE_DELEGATE_OneParam(FOnDialogueStartDelegate, Speakers);
 
 USTRUCT(BlueprintType)
 struct DIALOGUERUNTIME_API FDialogueNodeVisits
@@ -52,7 +56,7 @@ public:
 	virtual TMap<FName, UDialogueSpeakerComponent*> GetSpeakers() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
-	void StartDialogueWithNames(UDialogue* InDialogue, TMap<FName, UDialogueSpeakerComponent*> InSpeakers);
+	void StartDialogueWithNames(UDialogue* InDialogue, const TMap<FName, UDialogueSpeakerComponent*>& InSpeakers);
 	
 	UFUNCTION(BlueprintCallable, Category = "Dialogue")
 	void StartDialogue(UDialogue* InDialogue, TArray<UDialogueSpeakerComponent*> InSpeakers);
@@ -89,7 +93,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Dialogue")
-	void OpenDisplay();
+	void OpenWidget(const TMap<FName, UDialogueSpeakerComponent*>& InSpeakers);
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Dialogue")
 	void CloseDisplay();
@@ -118,19 +122,32 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Dialogue")
 	TObjectPtr<UDialogue> CurrentDialogue;
 
+	UPROPERTY(EditAnywhere, Category = "Dialogue")
+	TSubclassOf<UDialogueWidget> DialogueWidgetClass;
+
+	UPROPERTY(Transient, VisibleInstanceOnly, Category = "Dialogue")
+	TWeakObjectPtr<UCommonActivatableWidget> DialogueWidgetInstance;
+
+
+	UFUNCTION(BlueprintCallable, Category = "Dialogue")
+	void BeforePush();
+
+	UFUNCTION(BlueprintCallable, Category = "Dialogue")
+	void AfterPush(const TMap<FName, UDialogueSpeakerComponent*>& InSpeakers);
+
 private:
-	UPROPERTY()
-	TObjectPtr<UDialogueWidget> DialogueWidgetInstance;
 
 	FDialogueRecords DialogueRecords;
 
 public:
-	UPROPERTY(BlueprintAssignable, Category="Dialogue")
-	FDialogueControllerDelegate OnDialogueStarted;
-	
-	UPROPERTY(BlueprintAssignable, Category = "Dialogue")
-	FDialogueControllerDelegate OnDialogueEnded;
-	
 	UPROPERTY(BlueprintAssignable, Category = "Dialogue")
 	FDialogueControllerSpeechDelegate OnDialogueSpeechDisplayed;
+
+
+private:
+
+	FOnDialogueStartDelegate OnAfterWidgetPush;
+	void StartState(const TMap<FName, UDialogueSpeakerComponent*>& InSpeakers);
+
+	
 };

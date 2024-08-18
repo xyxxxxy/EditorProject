@@ -7,6 +7,9 @@
 
 /**
  * Game UI Manager Subsystem
+ * DefaultGame.ini
+ * [/Script/EditorProject.LyraUIManagerSubsystem]
+ * DefaultUIPolicyClass=/Game/UI/CommonGame/B_GameUIPolicy.B_GameUIPolicy_C
  */
 UCLASS(meta = (DisplayName = "Lyra UI Manager Subsystem", Category= Lyra ))
 class ULyraUIManagerSubsystem : public UGameUIManagerSubsystem

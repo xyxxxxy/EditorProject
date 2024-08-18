@@ -16,12 +16,4 @@ namespace LyraTag
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Zoom,          "InputTag.Zoom", "Zoom Camera");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_OpenMenu,          "InputTag.OpenMenu", "Open Menu");
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_Action_MainMenu,     "UI.Action.MainMenu", "Open the Main Menu");
-
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_Layer_Game,          "UI.Layer.Game", "");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_Layer_GameMenu,      "UI.Layer.GameMenu", "");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_Layer_Menu,          "UI.Layer.Menu", "");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_Layer_Modal,         "UI.Layer.Modal", "");
-
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_Message_Test,         "UI.Message.Test", "");
 }

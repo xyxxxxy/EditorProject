@@ -48,7 +48,8 @@ public class DialogueRuntime : ModuleRules
 				"GameplayTags",
 				"CommonUI",
 				"CommonInput",
-				"CommonUIEditor"
+				"CommonUIEditor",
+				"CommonGame"
 				// ... add private dependencies that you statically link with here ...	
 			}
 		);

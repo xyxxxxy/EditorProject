@@ -247,6 +247,6 @@ void ALyraCharacter::PushHUDWidget(const FInputActionValue& InputActionValue)
 	const APlayerController* PC = Cast<APlayerController>(Controller);
 	if(PC)
 	{
-		HUDLayoutWidget = UCommonUIExtensions::PushContentToLayer_ForPlayer(PC->GetLocalPlayer(), LyraTag::UI_Layer_Game, HUDLayoutClass);
+//		HUDLayoutWidget = UCommonUIExtensions::PushContentToLayer_ForPlayer(PC->GetLocalPlayer(), LyraTag::UI_Layer_Game, HUDLayoutClass);
 	}
 }

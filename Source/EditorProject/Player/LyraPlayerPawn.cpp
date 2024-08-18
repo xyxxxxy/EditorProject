@@ -49,7 +49,7 @@ void ALyraPlayerPawn::PossessedBy(AController* NewController)
 	{
 		// Add HUD Layout widget to the player's Game UI Layer
 		Lyra_LOG(TEXT("Pushing Game HUD [%s] to UI"), *GetNameSafe(HUDLayoutClass));
-		HUDLayoutWidget = UCommonUIExtensions::PushContentToLayer_ForPlayer(PC->GetLocalPlayer(), LyraTag::UI_Layer_Game, HUDLayoutClass);
+//		HUDLayoutWidget = UCommonUIExtensions::PushContentToLayer_ForPlayer(PC->GetLocalPlayer(), LyraTag::UI_Layer_Game, HUDLayoutClass);
 
 		// Add EnhancedInput IMCs
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULyraHelpers::GetEnhancedInputLocalPlayerSubsystem(PC))
