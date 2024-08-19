@@ -86,7 +86,7 @@ void UDialogue::DisplaySpeech(const FSpeechDetails& InDetails)
 	}
 
 	DialogueController->DisplaySpeech(InDetails, Speakers[InDetails.SpeakerName]);
-	DialogueController->OnDialogueSpeechDisplayed.Broadcast(InDetails);
+	//DialogueController->OnDialogueSpeechDisplayed.Broadcast(InDetails);
 }
 
 void UDialogue::SelectOption(int32 InOptionIndex) const

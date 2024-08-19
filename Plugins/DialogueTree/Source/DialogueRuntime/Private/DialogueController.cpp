@@ -21,7 +21,21 @@ ADialogueController::ADialogueController()
 	bIsSpatiallyLoaded = false;
 #endif
 	//check(DialogueWidgetInstance.Get());
-	OnAfterWidgetPush.BindUObject(this,&ADialogueController::StartState);
+	OnBeforeWidgetPush().BindUObject(this, &ADialogueController::NativeOnBeforeWidgetPush);
+	OnAfterWidgetPush().BindUObject(this, &ADialogueController::NativeOnAfterWidgetPush);
+}
+
+void ADialogueController::TransitionOut()
+{
+	UDialogueNode* DialogueNode = CurrentDialogue->GetActiveNode();
+	check(DialogueNode);
+	if(UDialogueSpeechNode* SpeechNode = Cast<UDialogueSpeechNode>(DialogueNode))
+	{
+		if(UDialogueTransition* Transition = SpeechNode->GetTransition())
+		{
+			Transition->TryTransitionOut();
+		}
+	}
 }
 
 void ADialogueController::SelectOption(int32 InOptionIndex) const
@@ -45,7 +59,7 @@ void ADialogueController::StartDialogueWithNames(UDialogue* InDialogue, const TM
 		return;
 	}
 
-	if (!CanOpenDisplay())
+	if (!CanOpenWidget())
 	{
 		UE_LOG(LogDialogueRuntime, Warning, TEXT("Controller : Can not open Dialogue Widget."));
 		return;
@@ -55,26 +69,26 @@ void ADialogueController::StartDialogueWithNames(UDialogue* InDialogue, const TM
 	UE_LOG(LogDialogueRuntime, Error, TEXT("Controller : StartDialogueWithNames."));
 	
 
-	OpenDisplay(InSpeakers);
+	OpenWidget(InSpeakers);
 	// Open Widget
-	if(APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
-	{
-		UCommonUIExtensions::SuspendInputForPlayer(PC->GetLocalPlayer(), FName(TEXT("Push Content To Layer")));
-		DialogueWidgetInstance = UCommonUIExtensions::PushContentToLayer_ForPlayer(
-			PC->GetLocalPlayer(), 
-			FGameplayTag::RequestGameplayTag(FName(TEXT("UI.Layer.Game"))), 
-			DialogueWidgetClass
-		);
-		if(DialogueWidgetInstance.Get() && DialogueWidgetInstance.Get()->Implements<UDialogueInterface>())
-		{
-			IDialogueInterface::Execute_SetController(DialogueWidgetInstance.Get(), this);
-		}
-	}
+	// if(APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
+	// {
+	// 	UCommonUIExtensions::SuspendInputForPlayer(PC->GetLocalPlayer(), FName(TEXT("Push Content To Layer")));
+	// 	DialogueWidgetInstance = UCommonUIExtensions::PushContentToLayer_ForPlayer(
+	// 		PC->GetLocalPlayer(), 
+	// 		FGameplayTag::RequestGameplayTag(FName(TEXT("UI.Layer.Game"))), 
+	// 		DialogueWidgetClass
+	// 	);
+	// 	if(DialogueWidgetInstance.Get() && DialogueWidgetInstance.Get()->Implements<UDialogueInterface>())
+	// 	{
+	// 		IDialogueInterface::Execute_SetController(DialogueWidgetInstance.Get(), this);
+	// 	}
+	// }
 	
 
 	
 	//OpenDisplay(InSpeakers);
-	OnAfterWidgetPush.ExecuteIfBound(InSpeakers);
+	//OnAfterWidgetPush.ExecuteIfBound(InSpeakers);
 	//Traverse Node
 	// ???
 	//CurrentDialogue->OpenDialogue(this, InSpeakers);
@@ -118,8 +132,7 @@ void ADialogueController::StartDialogue(UDialogue* InDialogue, TArray<UDialogueS
 
 void ADialogueController::EndDialogue()
 {
-	CloseDisplay();
-	//OnDialogueEnded.Broadcast();
+	CloseWidget();
 
 	if (CurrentDialogue)
 	{
@@ -136,6 +149,9 @@ void ADialogueController::EndDialogue()
 		CurrentDialogue->ClearController();
 		CurrentDialogue = nullptr;
 	}
+
+	// OnDialogueEnd
+	OnDialogueEnd().ExecuteIfBound();
 }
 
 void ADialogueController::Skip() const
@@ -143,6 +159,14 @@ void ADialogueController::Skip() const
 	if (CurrentDialogue)
 	{
 		CurrentDialogue->Skip();
+	}
+}
+
+void ADialogueController::SetSpeaker(FName InName, UDialogueSpeakerComponent* InSpeaker)
+{
+	if (CurrentDialogue && InSpeaker)
+	{
+		CurrentDialogue->SetSpeaker(InName, InSpeaker);
 	}
 }
 
@@ -154,13 +178,7 @@ void ADialogueController::ClearNodeVisits()
 	}
 }
 
-void ADialogueController::SetSpeaker(FName InName, UDialogueSpeakerComponent* InSpeaker)
-{
-	if (CurrentDialogue && InSpeaker)
-	{
-		CurrentDialogue->SetSpeaker(InName, InSpeaker);
-	}
-}
+
 
 FDialogueRecords ADialogueController::GetDialogueRecords() const
 {
@@ -280,37 +298,34 @@ bool ADialogueController::WasNodeVisited(const UDialogue* TargetDialogue, int32 
 	return TargetRecord.VisitedNodeIndices.Contains(TargetNodeIndex);
 }
 
-bool ADialogueController::CanOpenDisplay_Implementation() const
+
+bool ADialogueController::CanOpenWidget_Implementation() const
 {
 	return true;
 }
 
-UDialogue* ADialogueController::GetDialogue() const
-{
-	return CurrentDialogue;
-}
+void ADialogueController::OpenWidget_Implementation(const TMap<FName, UDialogueSpeakerComponent*>& InSpeakers){}
 
-void ADialogueController::TransitionOut()
+void ADialogueController::CloseWidget_Implementation()
 {
-	UDialogueNode* DialogueNode = CurrentDialogue->GetActiveNode();
-	check(DialogueNode);
-	if(UDialogueSpeechNode* SpeechNode = Cast<UDialogueSpeechNode>(DialogueNode))
+	if(DialogueWidgetInstance.Get())
 	{
-		if(UDialogueTransition* Transition = SpeechNode->GetTransition())
-		{
-			Transition->TryTransitionOut();
-		}
+		DialogueWidgetInstance.Get()->DeactivateWidget();
+		DialogueWidgetInstance.Reset();
 	}
 }
 
 void ADialogueController::DisplaySpeech_Implementation(FSpeechDetails InSpeechDetails, UDialogueSpeakerComponent* InSpeaker)
 {
-	GetWidget()->OnStateStart.Broadcast(InSpeechDetails);
+	OnStatementStartDelegate.ExecuteIfBound(InSpeechDetails);
 }
+
+void ADialogueController::DisplayOptions_Implementation(const TArray<FSpeechDetails>& InOptions){}
+void ADialogueController::HandleMissingSpeaker_Implementation(const FName& MissingName){}
 
 void ADialogueController::SetWidget(UUserWidget* InWidget)
 {
-	if(UDialogueWidget* Widget = Cast<UDialogueWidget>(InWidget))
+	if(UCommonActivatableWidget* Widget = Cast<UCommonActivatableWidget>(InWidget))
 	{
 		DialogueWidgetInstance = Widget;
 	}
@@ -318,25 +333,27 @@ void ADialogueController::SetWidget(UUserWidget* InWidget)
 
 UDialogueWidget* ADialogueController::GetWidget() const
 {
-	return Cast<UDialogueWidget>(DialogueWidgetInstance.Get());
+	return CastChecked<UDialogueWidget>(DialogueWidgetInstance.Get());
 }
 
-void ADialogueController::OpenWidget_Implementation(const TMap<FName, UDialogueSpeakerComponent*>& InSpeakers){}
 
-void ADialogueController::CloseDisplay_Implementation(){}
-
-void ADialogueController::DisplayOptions_Implementation(const TArray<FSpeechDetails>& InOptions){}
-
-void ADialogueController::HandleMissingSpeaker_Implementation(const FName& MissingName){}
-
-void ADialogueController::StartState(const TMap<FName, UDialogueSpeakerComponent*>& InSpeakers)
+void ADialogueController::BeforePush()
 {
-	//GetWidget()->OnStateStart.Broadcast()
-	CurrentDialogue->OpenDialogue(this, InSpeakers);
+	OnBeforeWidgetPush().ExecuteIfBound();
 }
-
-void ADialogueController::BeforePush(){}
 void ADialogueController::AfterPush(const TMap<FName, UDialogueSpeakerComponent*>& InSpeakers)
 {
-	OnAfterWidgetPush.ExecuteIfBound(InSpeakers);
+	OnAfterWidgetPush().ExecuteIfBound(InSpeakers);
+}
+void ADialogueController::NativeOnBeforeWidgetPush()
+{
+	BP_OnBeforeWidgetPush();
+}
+void ADialogueController::NativeOnAfterWidgetPush(const TMap<FName, UDialogueSpeakerComponent*>& InSpeakers)
+{
+	BP_OnAfterWidgetPush(InSpeakers);
+	CurrentDialogue->OpenDialogue(this, InSpeakers);
+}
+void ADialogueController::NativeOnAfterWidgetClose()
+{
 }

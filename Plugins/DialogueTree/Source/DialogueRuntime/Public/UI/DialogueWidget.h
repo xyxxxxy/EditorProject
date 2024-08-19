@@ -9,6 +9,7 @@
 #include "DialogueWidget.generated.h"
 
 class URichTextBlock;
+
 UENUM(BlueprintType)
 enum class EDialogueWidgetInputMode : uint8
 {
@@ -17,10 +18,6 @@ enum class EDialogueWidgetInputMode : uint8
 	Game,
 	Menu
 };
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDialogueControllerDelegate);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStateStart, FSpeechDetails, SpeechDetails);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStateEnd);
 
 UCLASS()
 class UDialogueWidget : public UCommonActivatableWidget, public IDialogueInterface
@@ -34,40 +31,34 @@ public:
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
 	//~End of UCommonActivatableWidget interface
 
-
 public:
-	virtual void NativeConstruct() override;
 	virtual void NativeOnInitialized() override;
-	virtual void NativeDestruct() override;
 
 	virtual void NativeOnActivated() override;
+	virtual void NativeOnDeactivated() override;
 
 public:
 	virtual void SetController_Implementation(ADialogueController* InController) override;
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget = true), Category = "Dialogue")
-	URichTextBlock* DialogueTextBlock;
+private:
+	// TODO: Press 'X' for Auto Dialogue and Press 'A' to reach end of sentence.
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn = true), Category = "Dialogue")
-	FText OriginText;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
-	float DisplayRate = 1.0f;
-
-	UPROPERTY(BlueprintAssignable, Category = "Dialogue")
-	FDialogueControllerDelegate OnDialogueStart;
-
-	UPROPERTY(BlueprintAssignable, Category = "Dialogue")
-	FDialogueControllerDelegate OnDialogueEnd;
-
-	UPROPERTY(BlueprintAssignable, Category = "Dialogue")
-	FOnStateStart OnStateStart;
-
-	UPROPERTY(BlueprintAssignable, Category = "Dialogue")
-	FOnStateEnd OnCurrentStateEnd;
-
+	UFUNCTION()
+	void StartNewStatement(FSpeechDetails InDetails);
 	
+	UFUNCTION()
+	void PreSwitchToNextStatement();
+
+	void OnSwitchToNextStatement();
+	void DisplayEntireStatement();
+
+	void DisplayDialogue();
+	void FindFirstIndexAfterRich();
+
+	void InitialValuables();
+
+	void Forward();
+	void Back();
 
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Dialogue")
@@ -76,9 +67,19 @@ protected:
 	FTimerHandle DisplayTextTimerHandle;
 	FTimerDelegate DisplayTextTimerDelegate;
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget = true), Category = "Dialogue")
+	URichTextBlock* DialogueTextBlock;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
+	FText OriginText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
+	float DisplayRate = 0.2f;
+
 protected:
 	/** The desired input mode to use while this UI is activated, for example do you want key presses to still reach the game/player controller? */
-	UPROPERTY(EditDefaultsOnly, Category=Input)
+	UPROPERTY(EditDefaultsOnly, Category = Input)
 	EDialogueWidgetInputMode InputMode = EDialogueWidgetInputMode::Default;
 
 	UPROPERTY(EditDefaultsOnly)
@@ -92,30 +93,9 @@ protected:
 	FUIActionBindingHandle BackHandle;
 	
 private:
-	// TODO: Press 'X' for Auto Dialogue and Press 'A' to reach end of sentence.
-
-	UFUNCTION()
-	void StartNewState(FSpeechDetails InDetails);
-	
-	UFUNCTION()
-	void PreSwitchToNextState();
-
-	void OnSwitchToNextState();
-
-	void DisplayEntireState();
-
-	void DisplayDialogue();
-	void EndDialogue();
-	void FindFirstIndexAfterRich();
-	void SetDisplayRate(float InRate);
-
-	void Forward();
-	void Back();
-	
-private:
 	int32 StrIndex = 0;
 	FString CurrentStr;
 	FString OriginStr;
 	bool bHasEntered = false;
-	bool bEntireState = false;
+	bool bEntireStatement = false;
 };

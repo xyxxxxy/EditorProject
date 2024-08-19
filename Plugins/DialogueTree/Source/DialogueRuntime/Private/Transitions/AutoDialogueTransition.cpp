@@ -2,6 +2,7 @@
 #include "Transitions/AutoDialogueTransition.h"
 #include "Nodes/DialogueSpeechNode.h"
 #include "Dialogue.h"
+#include "DialogueRuntimeLogChannels.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(AutoDialogueTransition)
 
@@ -25,6 +26,7 @@ void UAutoDialogueTransition::TransitionOut()
 	}
 	else
 	{
+		UE_LOG(LogDialogueRuntime, Warning, TEXT("%s : Transition Out / End Dialogue."), *GetNameSafe(this));
 		OwningNode->GetDialogue()->EndDialogue();
 	}
 }

@@ -37,43 +37,50 @@ TOptional<FUIInputConfig> UDialogueWidget::GetDesiredInputConfig() const
 	return ConfigOverride;	
 }
 
-void UDialogueWidget::NativeConstruct()
-{
-	Super::NativeConstruct();
-
-	OnStateStart.AddDynamic(this, &UDialogueWidget::StartNewState);
-	OnCurrentStateEnd.AddDynamic(this, &UDialogueWidget::PreSwitchToNextState);
-
-	OriginStr = OriginText.ToString();
-}
-
 void UDialogueWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
-	DisplayTextTimerDelegate.BindUObject(this,&UDialogueWidget::DisplayDialogue);
 
 	ForwardHandle = RegisterUIActionBinding(FBindUIActionArgs(ForwardInputActionData,true,FSimpleDelegate::CreateUObject(this,&ThisClass::Forward)));
 	BackHandle = RegisterUIActionBinding(FBindUIActionArgs(BackInputActionData,true,FSimpleDelegate::CreateUObject(this,&ThisClass::Back)));
 }
 
-void UDialogueWidget::NativeDestruct()
+
+void UDialogueWidget::NativeOnActivated()
 {
-	Super::NativeDestruct();
+	Super::NativeOnActivated();
+
+	OriginStr = OriginText.ToString();
+	DisplayTextTimerDelegate.BindUObject(this,&UDialogueWidget::DisplayDialogue);
+	DialogueController->OnStatementStart().BindUObject(this, &UDialogueWidget::StartNewStatement);
+	DialogueController->OnStatementEnd().BindUObject(this, &UDialogueWidget::PreSwitchToNextStatement);
+	InitialValuables();
+	DialogueTextBlock->SetText(FText::FromString(TEXT("")));
+}
+
+void UDialogueWidget::NativeOnDeactivated()
+{
+	Super::NativeOnDeactivated();
 	
+	DialogueController->OnStatementStart().Unbind();
+	DialogueController->OnStatementEnd().Unbind();
 	GetWorld()->GetTimerManager().ClearTimer(DisplayTextTimerHandle);
 	DisplayTextTimerDelegate.Unbind();
 }
 
+void UDialogueWidget::SetController_Implementation(ADialogueController* InController)
+{
+	check(InController);
+	DialogueController = InController;
+}
 
 void UDialogueWidget::DisplayDialogue()
 {
 	if(StrIndex >= OriginStr.Len())
 	{
 		UE_LOG(LogDialogueRuntime, Warning , TEXT("Widget : StrIndex >= OriginStr.Len()!"));
-		OnCurrentStateEnd.Broadcast();
-		//PreSwitchToNextState();
-		//EndDialogue();
+		// OnStatementEnd
+		DialogueController->OnStatementEnd().ExecuteIfBound();
 		return;
 	}
 
@@ -128,10 +135,6 @@ void UDialogueWidget::DisplayDialogue()
 	}
 }
 
-void UDialogueWidget::EndDialogue()
-{
-	GetWorld()->GetTimerManager().PauseTimer(DisplayTextTimerHandle);
-}
 
 void UDialogueWidget::FindFirstIndexAfterRich()
 {
@@ -142,12 +145,7 @@ void UDialogueWidget::FindFirstIndexAfterRich()
 	StrIndex++;
 }
 
-void UDialogueWidget::SetDisplayRate(float InRate)
-{
-	DisplayRate = InRate;
-}
-
-void UDialogueWidget::StartNewState(FSpeechDetails InDetails)
+void UDialogueWidget::StartNewStatement(FSpeechDetails InDetails)
 {
 	OriginText = InDetails.SpeechText;
 	OriginStr = OriginText.ToString();
@@ -155,51 +153,50 @@ void UDialogueWidget::StartNewState(FSpeechDetails InDetails)
 	GetWorld()->GetTimerManager().SetTimer(DisplayTextTimerHandle, DisplayTextTimerDelegate, DisplayRate, true);
 }
 
-void UDialogueWidget::PreSwitchToNextState()
+void UDialogueWidget::PreSwitchToNextStatement()
+{
+	InitialValuables();
+	GetWorld()->GetTimerManager().ClearTimer(DisplayTextTimerHandle);
+}
+
+void UDialogueWidget::InitialValuables()
 {
 	CurrentStr.Empty();
 	OriginStr.Empty();
 	StrIndex = 0;
 	bHasEntered = false;
-	bEntireState = true;
-	GetWorld()->GetTimerManager().ClearTimer(DisplayTextTimerHandle);
+	bEntireStatement = true;
 }
 
-void UDialogueWidget::DisplayEntireState()
+void UDialogueWidget::DisplayEntireStatement()
 {
 	GetWorld()->GetTimerManager().PauseTimer(DisplayTextTimerHandle);
 	DialogueTextBlock->SetText(OriginText);
-	PreSwitchToNextState();
+	PreSwitchToNextStatement();
 }
 
-void UDialogueWidget::OnSwitchToNextState()
+void UDialogueWidget::OnSwitchToNextStatement()
 {
 	check(DialogueController);
 	DialogueController->TransitionOut();
-	bEntireState = false;
+	bEntireStatement = false;
 }
 
 void UDialogueWidget::Forward()
 {
-	if(bEntireState)
+	if(bEntireStatement)
 	{
-		OnSwitchToNextState();
+		OnSwitchToNextStatement();
 	}
 	else
 	{
-		DisplayEntireState();
+		DisplayEntireStatement();
 	}
 }
 
-void UDialogueWidget::SetController_Implementation(ADialogueController* InController)
-{
-	check(InController);
-	DialogueController = InController;
-}
 
-void UDialogueWidget::NativeOnActivated()
-{
-}
+
+
 
 void UDialogueWidget::Back()
 {
