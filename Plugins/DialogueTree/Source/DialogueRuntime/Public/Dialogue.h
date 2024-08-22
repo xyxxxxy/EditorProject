@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "SpeechDetails.h"
+#include "DialogueOption.h"
 #include "Dialogue.generated.h"
 
 class ADialogueController;
@@ -91,7 +92,7 @@ public:
 	void ClearController();
 	//
 	void DisplaySpeech(const FSpeechDetails& InDetails);
-	//void DisplayOptions(TArray<FDialogueOption> InOptions) const;
+	void DisplayOptions(TArray<FDialogueOption> InOptions) const;
 	//
 	void SelectOption(int32 InOptionIndex) const;
 	void Skip() const;
@@ -141,6 +142,7 @@ private:
 
 public:
 	UDialogueNode* GetActiveNode() const;
+	ADialogueController* GetDialogueController() const { return DialogueController; }
 
 private:
 	UPROPERTY(EditAnywhere, NoClear, Category = "Dialogue", meta=(NoResetToDefault))

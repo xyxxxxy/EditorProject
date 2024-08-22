@@ -43,14 +43,6 @@ void UDialogueTransition::TransitionOut()
 	UE_LOG(LogDialogueRuntime, Warning, TEXT("%s : Transition Out."), *GetNameSafe(this));
 }
 
-void UDialogueTransition::SelectOption(int32 InOptionIndex)
-{
-}
-
-void UDialogueTransition::Skip()
-{
-}
-
 FText UDialogueTransition::GetDisplayName() const
 {
 	return FText::FromString(StaticClass()->GetName());

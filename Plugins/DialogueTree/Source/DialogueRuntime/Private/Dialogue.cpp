@@ -89,8 +89,29 @@ void UDialogue::DisplaySpeech(const FSpeechDetails& InDetails)
 	//DialogueController->OnDialogueSpeechDisplayed.Broadcast(InDetails);
 }
 
+void UDialogue::DisplayOptions(TArray<FDialogueOption> InOptions) const
+{
+	if (!DialogueController)
+	{
+		UE_LOG(LogDialogueRuntime, Error, TEXT("Attempting to display options via missing dialogue controller. Aborting dialogue."));
+		return;
+	}
+
+	TArray<FSpeechDetails> AllDetails;
+	for (const FDialogueOption& Option : InOptions)
+	{
+		AllDetails.Add(Option.Details);
+	}
+
+	DialogueController->DisplayOptions(AllDetails);	
+}
+
 void UDialogue::SelectOption(int32 InOptionIndex) const
 {
+	if (ActiveNode)
+	{
+		ActiveNode->SelectOption(InOptionIndex);
+	}	
 }
 
 void UDialogue::Skip() const

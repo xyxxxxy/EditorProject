@@ -70,7 +70,8 @@ FDialogueOption UDialogueSpeechNode::GetAsOption()
 
 void UDialogueSpeechNode::SelectOption(int32 InOptionIndex)
 {
-	Super::SelectOption(InOptionIndex);
+	//Super::SelectOption(InOptionIndex);
+	Transition->SelectOption(InOptionIndex);
 }
 
 void UDialogueSpeechNode::Skip()

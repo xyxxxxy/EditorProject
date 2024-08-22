@@ -13,6 +13,7 @@ class UDialogue;
 class UDialogueSpeakerComponent;
 class UDialogueWidget;
 class UCommonActivatableWidget;
+class UDialogueTransition;
 
 typedef const TMap<FName, UDialogueSpeakerComponent*>& Speakers;
 
@@ -21,12 +22,14 @@ typedef const TMap<FName, UDialogueSpeakerComponent*>& Speakers;
 // DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBPOnDialogueEndDelegate);
 
 
-DECLARE_DELEGATE(FOnBeforeWidgetPushDelegate);
-DECLARE_DELEGATE_OneParam(FOnAfterWidgetPushDelegate, Speakers);
-DECLARE_DELEGATE(FOnDialogueEndDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnBeforeWidgetPushDelegate);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnAfterWidgetPushDelegate, Speakers);
+DECLARE_MULTICAST_DELEGATE(FOnDialogueEndDelegate);
 
-DECLARE_DELEGATE_OneParam(FOnStatementStartDelegate, FSpeechDetails);
-DECLARE_DELEGATE(FOnStatementEndDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnDisplayOptionsDelegate);
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnStatementStartDelegate, const FSpeechDetails&);
+DECLARE_MULTICAST_DELEGATE(FOnStatementEndDelegate);
 
 
 
@@ -119,7 +122,7 @@ public:
 	void CloseWidget();
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Dialogue")
-	void DisplaySpeech(FSpeechDetails InSpeechDetails, UDialogueSpeakerComponent* InSpeaker);
+	void DisplaySpeech(const FSpeechDetails& InSpeechDetails, UDialogueSpeakerComponent* InSpeaker);
 	
 	UFUNCTION(BlueprintNativeEvent, BlueprintNativeEvent, Category = "Dialogue")
 	void DisplayOptions(const TArray<FSpeechDetails>& InOptions);
@@ -135,12 +138,15 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Dialogue")
 	UDialogueWidget* GetWidget() const;
 
+	UDialogueTransition* GetTransition();
 
-	FOnBeforeWidgetPushDelegate& OnBeforeWidgetPush() const {return OnBeforeWidgetPushDelegate; }
+
+	FOnBeforeWidgetPushDelegate& OnBeforeWidgetPush() const { return OnBeforeWidgetPushDelegate; }
 	FOnAfterWidgetPushDelegate& OnAfterWidgetPush() const { return OnAfterWidgetPushDelegate; }
 	FOnDialogueEndDelegate& OnDialogueEnd() const { return OnDialogueEndDelegate; }
-	FOnStatementStartDelegate& OnStatementStart() const {return OnStatementStartDelegate; }
-	FOnStatementEndDelegate& OnStatementEnd() const {return OnStatementEndDelegate; }
+	FOnStatementStartDelegate& OnStatementStart() const { return OnStatementStartDelegate; }
+	FOnStatementEndDelegate& OnStatementEnd() const { return OnStatementEndDelegate; }
+	FOnDisplayOptionsDelegate& OnDisplayOptions() const { return OnDisplayOptionsDelegate; };
 	
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Dialogue")
@@ -168,6 +174,10 @@ protected:
 	void BP_OnAfterWidgetClose();
 	virtual void NativeOnAfterWidgetClose();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Dialogue", meta = (DisplayName = "On Display Options"))
+	void BP_OnDisplayOptions();
+	virtual void NativeOnDisplayOptions();	
+
 private:
 	FDialogueRecords DialogueRecords;
 
@@ -184,6 +194,8 @@ private:
 	mutable FOnBeforeWidgetPushDelegate OnBeforeWidgetPushDelegate;
 	mutable FOnAfterWidgetPushDelegate OnAfterWidgetPushDelegate;
 	mutable FOnDialogueEndDelegate OnDialogueEndDelegate;
+
+	mutable FOnDisplayOptionsDelegate OnDisplayOptionsDelegate;
 	
 	mutable FOnStatementStartDelegate OnStatementStartDelegate;
 	mutable FOnStatementEndDelegate OnStatementEndDelegate;

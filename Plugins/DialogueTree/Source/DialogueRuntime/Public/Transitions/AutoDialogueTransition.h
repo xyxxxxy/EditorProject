@@ -12,5 +12,4 @@ public:
 	virtual FText GetDisplayName() const override;
 	virtual FText GetNodeCreationTooltip() const override;
 	virtual void TransitionOut() override;
-	
 };

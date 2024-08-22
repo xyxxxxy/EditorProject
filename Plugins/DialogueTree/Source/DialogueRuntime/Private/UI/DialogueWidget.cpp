@@ -3,6 +3,7 @@
 #include "Components/RichTextBlock.h"
 #include "DialogueRuntimeLogChannels.h"
 #include "Input/CommonUIInputTypes.h"
+#include "Transitions/InputDialogueTransition.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueWidget)
 
@@ -11,30 +12,6 @@ const static FString Suffix = FString(TEXT("</>"));
 UDialogueWidget::UDialogueWidget(const FObjectInitializer& ObjectInitializer)
  : Super(ObjectInitializer)
 {
-}
-
-TOptional<FUIInputConfig> UDialogueWidget::GetDesiredInputConfig() const
-{
-	FUIInputConfig ConfigOverride;
-
-	switch (InputMode)
-	{
-	case EDialogueWidgetInputMode::Game:
-		ConfigOverride = FUIInputConfig(ECommonInputMode::Game, EMouseCaptureMode::CapturePermanently_IncludingInitialMouseDown);
-		break;
-	case EDialogueWidgetInputMode::GameAndMenu:
-		ConfigOverride = FUIInputConfig(ECommonInputMode::All, EMouseCaptureMode::CaptureDuringMouseDown);
-		break;
-	case EDialogueWidgetInputMode::Menu:
-		ConfigOverride = FUIInputConfig(ECommonInputMode::Menu, EMouseCaptureMode::NoCapture);
-		break;
-	case EDialogueWidgetInputMode::Default:
-	default:
-		// By default, no input change is desired, return an empty config
-		return TOptional<FUIInputConfig>();
-	}
-
-	return ConfigOverride;	
 }
 
 void UDialogueWidget::NativeOnInitialized()
@@ -49,11 +26,12 @@ void UDialogueWidget::NativeOnInitialized()
 void UDialogueWidget::NativeOnActivated()
 {
 	Super::NativeOnActivated();
+	check(DialogueController);
 
 	OriginStr = OriginText.ToString();
 	DisplayTextTimerDelegate.BindUObject(this,&UDialogueWidget::DisplayDialogue);
-	DialogueController->OnStatementStart().BindUObject(this, &UDialogueWidget::StartNewStatement);
-	DialogueController->OnStatementEnd().BindUObject(this, &UDialogueWidget::PreSwitchToNextStatement);
+	DialogueController->OnStatementStart().AddUObject(this, &UDialogueWidget::StartNewStatement);
+	DialogueController->OnStatementEnd().AddUObject(this, &UDialogueWidget::PreSwitchToNextStatement);
 	InitialValuables();
 	DialogueTextBlock->SetText(FText::FromString(TEXT("")));
 }
@@ -62,8 +40,8 @@ void UDialogueWidget::NativeOnDeactivated()
 {
 	Super::NativeOnDeactivated();
 	
-	DialogueController->OnStatementStart().Unbind();
-	DialogueController->OnStatementEnd().Unbind();
+	DialogueController->OnStatementStart().Clear();
+	DialogueController->OnStatementEnd().Clear();
 	GetWorld()->GetTimerManager().ClearTimer(DisplayTextTimerHandle);
 	DisplayTextTimerDelegate.Unbind();
 }
@@ -80,7 +58,7 @@ void UDialogueWidget::DisplayDialogue()
 	{
 		UE_LOG(LogDialogueRuntime, Warning , TEXT("Widget : StrIndex >= OriginStr.Len()!"));
 		// OnStatementEnd
-		DialogueController->OnStatementEnd().ExecuteIfBound();
+		DialogueController->OnStatementEnd().Broadcast();
 		return;
 	}
 
@@ -145,11 +123,17 @@ void UDialogueWidget::FindFirstIndexAfterRich()
 	StrIndex++;
 }
 
-void UDialogueWidget::StartNewStatement(FSpeechDetails InDetails)
+void UDialogueWidget::StartNewStatement(const FSpeechDetails& InDetails)
 {
+	// input transition
 	OriginText = InDetails.SpeechText;
+	if(OriginText.IsEmpty())
+	{
+		OriginText = FText::FromString(TEXT("------------[It's empty! check your DialogueTree]------------"));
+	}
 	OriginStr = OriginText.ToString();
 	//DisplayRate = InDetails.
+	bEntireStatement = false;
 	GetWorld()->GetTimerManager().SetTimer(DisplayTextTimerHandle, DisplayTextTimerDelegate, DisplayRate, true);
 }
 
@@ -177,20 +161,19 @@ void UDialogueWidget::DisplayEntireStatement()
 
 void UDialogueWidget::OnSwitchToNextStatement()
 {
-	check(DialogueController);
 	DialogueController->TransitionOut();
-	bEntireStatement = false;
+	
 }
 
 void UDialogueWidget::Forward()
 {
-	if(bEntireStatement)
+	if(!bEntireStatement)
+	{
+		DisplayEntireStatement();		
+	}
+	else if(!DialogueController->GetTransition()->IsA<UInputDialogueTransition>())
 	{
 		OnSwitchToNextStatement();
-	}
-	else
-	{
-		DisplayEntireStatement();
 	}
 }
 

@@ -21,8 +21,9 @@ ADialogueController::ADialogueController()
 	bIsSpatiallyLoaded = false;
 #endif
 	//check(DialogueWidgetInstance.Get());
-	OnBeforeWidgetPush().BindUObject(this, &ADialogueController::NativeOnBeforeWidgetPush);
-	OnAfterWidgetPush().BindUObject(this, &ADialogueController::NativeOnAfterWidgetPush);
+	OnBeforeWidgetPush().AddUObject(this, &ADialogueController::NativeOnBeforeWidgetPush);
+	OnAfterWidgetPush().AddUObject(this, &ADialogueController::NativeOnAfterWidgetPush);
+	OnDisplayOptions().AddUObject(this, &ADialogueController::NativeOnDisplayOptions);
 }
 
 void ADialogueController::TransitionOut()
@@ -39,7 +40,8 @@ void ADialogueController::TransitionOut()
 }
 
 void ADialogueController::SelectOption(int32 InOptionIndex) const
-{	
+{
+	CurrentDialogue->SelectOption(InOptionIndex);
 }
 
 TMap<FName, UDialogueSpeakerComponent*> ADialogueController::GetSpeakers() const
@@ -151,7 +153,7 @@ void ADialogueController::EndDialogue()
 	}
 
 	// OnDialogueEnd
-	OnDialogueEnd().ExecuteIfBound();
+	OnDialogueEnd().Broadcast();
 }
 
 void ADialogueController::Skip() const
@@ -315,9 +317,9 @@ void ADialogueController::CloseWidget_Implementation()
 	}
 }
 
-void ADialogueController::DisplaySpeech_Implementation(FSpeechDetails InSpeechDetails, UDialogueSpeakerComponent* InSpeaker)
+void ADialogueController::DisplaySpeech_Implementation(const FSpeechDetails& InSpeechDetails, UDialogueSpeakerComponent* InSpeaker)
 {
-	OnStatementStartDelegate.ExecuteIfBound(InSpeechDetails);
+	OnStatementStart().Broadcast(InSpeechDetails);
 }
 
 void ADialogueController::DisplayOptions_Implementation(const TArray<FSpeechDetails>& InOptions){}
@@ -336,14 +338,24 @@ UDialogueWidget* ADialogueController::GetWidget() const
 	return CastChecked<UDialogueWidget>(DialogueWidgetInstance.Get());
 }
 
+UDialogueTransition* ADialogueController::GetTransition()
+{
+	UDialogueNode* DialogueNode = CurrentDialogue->GetActiveNode();
+	check(DialogueNode);
+	if(UDialogueSpeechNode* SpeechNode = Cast<UDialogueSpeechNode>(DialogueNode))
+	{
+		return SpeechNode->GetTransition();
+	}
+	return nullptr;
+}
 
 void ADialogueController::BeforePush()
 {
-	OnBeforeWidgetPush().ExecuteIfBound();
+	OnBeforeWidgetPush().Broadcast();
 }
 void ADialogueController::AfterPush(const TMap<FName, UDialogueSpeakerComponent*>& InSpeakers)
 {
-	OnAfterWidgetPush().ExecuteIfBound(InSpeakers);
+	OnAfterWidgetPush().Broadcast(InSpeakers);
 }
 void ADialogueController::NativeOnBeforeWidgetPush()
 {
@@ -356,4 +368,9 @@ void ADialogueController::NativeOnAfterWidgetPush(const TMap<FName, UDialogueSpe
 }
 void ADialogueController::NativeOnAfterWidgetClose()
 {
+}
+
+void ADialogueController::NativeOnDisplayOptions()
+{
+	BP_OnDisplayOptions();
 }

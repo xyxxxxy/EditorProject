@@ -2,7 +2,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonActivatableWidget.h"
+#include "DialogueWidgetBase.h"
 #include "SpeechDetails.h"
 #include "DialogueController.h"
 #include "DialogueInterface.h"
@@ -10,26 +10,14 @@
 
 class URichTextBlock;
 
-UENUM(BlueprintType)
-enum class EDialogueWidgetInputMode : uint8
-{
-	Default,
-	GameAndMenu,
-	Game,
-	Menu
-};
 
 UCLASS()
-class UDialogueWidget : public UCommonActivatableWidget, public IDialogueInterface
+class UDialogueWidget : public UDialogueWidgetBase
 {
 	GENERATED_BODY()
 
 public:
 	UDialogueWidget(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-
-	//~UCommonActivatableWidget interface
-	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
-	//~End of UCommonActivatableWidget interface
 
 public:
 	virtual void NativeOnInitialized() override;
@@ -44,7 +32,7 @@ private:
 	// TODO: Press 'X' for Auto Dialogue and Press 'A' to reach end of sentence.
 
 	UFUNCTION()
-	void StartNewStatement(FSpeechDetails InDetails);
+	void StartNewStatement(const FSpeechDetails& InDetails);
 	
 	UFUNCTION()
 	void PreSwitchToNextStatement();
@@ -61,9 +49,6 @@ private:
 	void Back();
 
 protected:
-	UPROPERTY(BlueprintReadWrite, Category = "Dialogue")
-	TObjectPtr<ADialogueController> DialogueController;
-
 	FTimerHandle DisplayTextTimerHandle;
 	FTimerDelegate DisplayTextTimerDelegate;
 
@@ -78,10 +63,6 @@ public:
 	float DisplayRate = 0.2f;
 
 protected:
-	/** The desired input mode to use while this UI is activated, for example do you want key presses to still reach the game/player controller? */
-	UPROPERTY(EditDefaultsOnly, Category = Input)
-	EDialogueWidgetInputMode InputMode = EDialogueWidgetInputMode::Default;
-
 	UPROPERTY(EditDefaultsOnly)
 	FDataTableRowHandle ForwardInputActionData;
 
