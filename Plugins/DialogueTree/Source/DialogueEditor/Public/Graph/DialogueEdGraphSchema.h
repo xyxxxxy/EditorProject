@@ -42,6 +42,7 @@ public:
 private:
 	void GetPinContextMenu(UToolMenu* Menu, UEdGraphPin* Pin, FText PinText) const;
 
+	void GetNodeContextMenu(UToolMenu* Menu) const;
 	void GetNodeMenuActions(FGraphContextMenuBuilder& ContextMenuBuilder) const;
 
 	void GetSpeechNodeMenuActions(FGraphContextMenuBuilder& ContextMenuBuilder) const;

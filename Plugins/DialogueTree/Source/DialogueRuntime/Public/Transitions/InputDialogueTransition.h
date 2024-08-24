@@ -6,7 +6,7 @@
 #include "InputDialogueTransition.generated.h"
 
 UCLASS()
-class UInputDialogueTransition : public UDialogueTransition
+class DIALOGUERUNTIME_API UInputDialogueTransition : public UDialogueTransition
 {
     GENERATED_BODY()
 public:

@@ -4,6 +4,8 @@
 #include "DialogueEditorStyle.h"
 #include "Graph/Nodes/GraphNodeDialogueSpeech.h"
 #include "DialogueSpeakerSocket.h"
+#include "Transitions/InputDialogueTransition.h"
+
 
 #define LOCTEXT_NAMESPACE "SGraphNodeDialogueSpeech"
 
@@ -126,7 +128,16 @@ FText SGraphNodeDialogueSpeech::GetNodeSubtitleText() const
 
 const FSlateBrush *SGraphNodeDialogueSpeech::GetTransitionIcon() const
 {
-	return FDialogueEditorStyle::GetBrush("InputTransitionIcon");
+	check(SpeechNode);
+	UClass* TransitionType = SpeechNode->GetTransitionType();
+	if (TransitionType == UInputDialogueTransition::StaticClass())
+	{
+		return FDialogueEditorStyle::GetBrush("InputTransitionIcon");
+	}
+	else
+	{
+		return FDialogueEditorStyle::GetBrush("AutoTransitionIcon");
+	}	
 }
 
 #undef LOCTEXT_NAMESPACE

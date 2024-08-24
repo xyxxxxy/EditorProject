@@ -58,6 +58,7 @@ void FDialogueEditorStyle::RegisterIconBrushes()
 	StyleSet->Set("ExitPin",new IMAGE_BRUSH("Icons/CubePin_Grey",Icon32));
 
 	StyleSet->Set("InputTransitionIcon",new IMAGE_BRUSH("Icons/ArrowIcon_Input",Icon32));
+	StyleSet->Set("AutoTransitionIcon",new IMAGE_BRUSH("Icons/ArrowIcon_Auto",Icon32));
 
 	StyleSet->Set("NodeHeaderGloss",new IMAGE_BRUSH("Icons/NodeHeaderGloss",Icon32));
 	StyleSet->Set("NodeHeaderColorSpill",new IMAGE_BRUSH("Icons/NodeHeaderColorSpill",Icon32));

@@ -15,6 +15,8 @@ void SDialogueGraphEditor::Construct(const FArguments& InArgs, const TSharedPtr<
 
 	InEditor->SetGraph(Dialogue->GetGraph());
 	InEditor->SetGraphEditor(SharedThis(this));
+
+	
 	
 	BindGraphCommands();
 

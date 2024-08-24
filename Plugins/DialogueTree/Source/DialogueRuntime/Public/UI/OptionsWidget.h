@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include "DialogueWidgetBase.h"
 #include "SpeechDetails.h"
 #include "OptionsWidget.generated.h"

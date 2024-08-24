@@ -6,6 +6,8 @@
 #include "Graph/Nodes/GraphNodeDialogueSpeech.h"
 #include "Transitions/DialogueTransition.h"
 #include "Graph/DialogueTreeConnectionDrawingPolicy.h"
+#include "Framework/Commands/GenericCommands.h"
+#include "GraphEditorActions.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(DialogueEdGraphSchema)
 
@@ -38,6 +40,11 @@ void UDialogueEdGraphSchema::GetGraphContextActions(FGraphContextMenuBuilder& Co
 
 void UDialogueEdGraphSchema::GetContextMenuActions(UToolMenu* Menu, UGraphNodeContextMenuContext* Context) const
 {
+	if(Context->Node)
+	{
+		GetNodeContextMenu(Menu);
+	}
+	
 	Super::GetContextMenuActions(Menu, Context);
 }
 
@@ -105,9 +112,18 @@ void UDialogueEdGraphSchema::ForceVisualizationCacheClear() const
 	Super::ForceVisualizationCacheClear();
 }
 
+void UDialogueEdGraphSchema::GetNodeContextMenu(UToolMenu* Menu) const
+{
+	FToolMenuSection& NodeMenuSection = Menu->AddSection(FName(TEXT("DialogueTreeNodeAcitons")), LOCTEXT("NodeActionCategory", "Node Actions"));
+	NodeMenuSection.AddMenuEntry(FGenericCommands::Get().Delete);
+	NodeMenuSection.AddMenuEntry(FGenericCommands::Get().Cut);
+	NodeMenuSection.AddMenuEntry(FGenericCommands::Get().Copy);
+	NodeMenuSection.AddMenuEntry(FGenericCommands::Get().Duplicate);
+	NodeMenuSection.AddMenuEntry(FGraphEditorCommands::Get().BreakNodeLinks);
+}
+
 void UDialogueEdGraphSchema::GetNodeMenuActions(FGraphContextMenuBuilder& ContextMenuBuilder) const
 {
-
 }
 
 void UDialogueEdGraphSchema::GetSpeechNodeMenuActions(FGraphContextMenuBuilder& ContextMenuBuilder) const
