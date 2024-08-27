@@ -27,7 +27,7 @@ public class TargetIndicator : ModuleRules
 			{
 				"Core",
 				"UMG",
-				"Engine"
+				"Engine",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -40,6 +40,7 @@ public class TargetIndicator : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

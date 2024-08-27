@@ -19,6 +19,6 @@
 			"Name": "TargetIndicator",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
-		}
+		}	
 	]
 }

@@ -2632,7 +2632,23 @@
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	},
 	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\TargetIndicator\\Source\\TargetIndicator\\Private\\IndicatorManagerSubsystem.cpp",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\TargetIndicator.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\TargetIndicator\\Source\\TargetIndicator\\Private\\IndicatorWidget.cpp",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\TargetIndicator.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\TargetIndicator\\Source\\TargetIndicator\\Private\\TargetIndicatorLogChannels.cpp",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
 			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\TargetIndicator.22.rsp"
@@ -2648,7 +2664,23 @@
 		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
 	},
 	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\TargetIndicator\\Source\\TargetIndicator\\Public\\IndicatorManagerSubsystem.h",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\TargetIndicator.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
 		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\TargetIndicator\\Source\\TargetIndicator\\Public\\IndicatorWidget.h",
+		"arguments": [
+			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
+			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\TargetIndicator.22.rsp"
+		],
+		"directory": "E:\\UE\\UE_5.2\\Engine\\Source"
+	},
+	{
+		"file": "E:\\Dowload\\UEdownload\\EditorProject\\Plugins\\TargetIndicator\\Source\\TargetIndicator\\Public\\TargetIndicatorLogChannels.h",
 		"arguments": [
 			"E:\\Software\\VS\\VC\\Tools\\MSVC\\14.40.33807\\bin\\Hostx64\\x64\\cl.exe",
 			"@E:\\Dowload\\UEdownload\\EditorProject\\.vscode\\compileCommands_EditorProject\\TargetIndicator.22.rsp"
