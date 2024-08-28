@@ -9,8 +9,15 @@ class UIndicatorManagerSubsystem;
 class UTextBlock;
 class UOverlay;
 
-UCLASS()
-class UIndicatorWidget : public UUserWidget
+UENUM(BlueprintType)
+enum class EIndicatorShowTypes : uint8 
+{
+    Always,
+    Clip
+};
+
+UCLASS(Abstract)
+class TARGETINDICATOR_API UIndicatorWidget : public UUserWidget
 {
     GENERATED_BODY()
 public:
@@ -21,49 +28,55 @@ public:
     virtual void NativeDestruct() override;
 
 public:
-
-    UPROPERTY(EditAnyWhere, meta = (BindWidget = true), Category = "Indicator")
-    TObjectPtr<UOverlay> TargetIndicator;
-
-    UPROPERTY(EditAnyWhere, meta = (BindWidget = true), Category = "Indicator")
-    TObjectPtr<UTextBlock> DistanceTextBlock;
-
     UPROPERTY(BlueprintReadOnly, Category = "Indicator")
     TObjectPtr<AActor> TargetActor;
 
 protected:
-
-    UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "Get Overlay"),Category = "Indicator")
-    UOverlay* BP_GetOverlay() const;
-
     void UpdateIndicator();
+
     void UpdateDistance();
+    void CheckDistance();
+
     void UpdatePosition();
     void SetRelativePosition();
     void SetPrimitivePosition();
-    void SetClippingPosition();
+    bool SetClippingPosition(const FVector2D& Target, const FVector2D& Relative, const FVector2D& WindowsSize, FVector2D& Clip);
 
-    void Test();
+    UPROPERTY(BlueprintReadOnly, meta = (BindWidget = true), Category = "Indicator")
+    TObjectPtr<UOverlay> TargetIndicator;
+
+    UPROPERTY(BlueprintReadOnly, meta = (BindWidget = true), Category = "Indicator")
+    TObjectPtr<UTextBlock> DistanceTextBlock;
 
     UPROPERTY()
     TObjectPtr<UIndicatorManagerSubsystem> IndicatorManagerSubsystem;
 
-    UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Indicator")
+    UPROPERTY(EditAnywhere, Category = "Indicator")
+    EIndicatorShowTypes ShowTypes = EIndicatorShowTypes::Always;
+
+    UPROPERTY(EditAnywhere, Category = "Indicator")
     float UpdateFrequency = 0.2f;
 
-    UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Indicator")
-    FVector TargetOffset;   
+    UPROPERTY(EditAnyWhere, meta = (InlineEditConditionToggle = "TargetOffset"), Category = "Indicator")
+    bool bUseTargetoffset = false;
+
+    UPROPERTY(EditAnywhere, meta = (EditCondition = "bUseTargetoffset"), Category = "Indicator")
+    FVector TargetOffset = FVector::ZeroVector;
+
+    UPROPERTY(EditAnywhere, Category = "Indicator")
+    float LimitedDistance = 2.0f;
 
     UPROPERTY(BlueprintReadWrite,Category = "Indicator")
     float Distance = 0.0f;
 
-    FVector2D RelativePosition = FVector2D::ZeroVector;
-    FVector2D PrimitivePosition = FVector2D::ZeroVector;
-    FVector2D ClippingPosition = FVector2D::ZeroVector;
 
-    FVector2D DefaultWindowsSize = FVector2D::ZeroVector;
 
 private:
     FTimerHandle IndicatorTimerHandle;
     FTimerDelegate IndicatorTimerDelegate;
+    
+    FVector2D RelativePosition = FVector2D::ZeroVector;
+    FVector2D PrimitivePosition = FVector2D::ZeroVector;
+    FVector2D ClippingPosition = FVector2D::ZeroVector;
+    FVector2D DefaultWindowsSize = FVector2D::ZeroVector;   
 };

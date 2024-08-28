@@ -7,7 +7,7 @@
 class UIndicatorWidget;
 
 UCLASS()
-class UIndicatorManagerSubsystem : public UGameInstanceSubsystem
+class TARGETINDICATOR_API UIndicatorManagerSubsystem : public UGameInstanceSubsystem
 {
     GENERATED_BODY()
 public:
@@ -29,5 +29,5 @@ public:
 
 private:
     UPROPERTY(Transient)
-    TMap<AActor*, UIndicatorWidget*> Widgets;
+    TMap<TObjectPtr<AActor>, TObjectPtr<UIndicatorWidget>> Widgets;
 };

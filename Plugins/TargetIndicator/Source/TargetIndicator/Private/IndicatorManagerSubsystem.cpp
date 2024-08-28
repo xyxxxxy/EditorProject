@@ -21,7 +21,7 @@ void UIndicatorManagerSubsystem::Deinitialize()
 {
     Super::Deinitialize();
     UE_LOG(LogTargetIndicator, Warning, TEXT("%s is Deinitialized."), *GetNameSafe(this));
-    RemoveAllIndicator();
+    //RemoveAllIndicator();
 }
 
 void UIndicatorManagerSubsystem::StartIndicator(const TArray<AActor*>& TargetActors, TSubclassOf<UIndicatorWidget> DefaultWidgetClass)
