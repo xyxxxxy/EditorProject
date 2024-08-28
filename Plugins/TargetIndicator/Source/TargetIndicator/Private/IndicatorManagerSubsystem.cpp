@@ -1,7 +1,7 @@
 
 #include "IndicatorManagerSubsystem.h"
 #include "TargetIndicatorLogChannels.h"
-#include "IndicatorWidget.h"
+#include "IndicatorWidgetBase.h"
 #include "Kismet/GameplayStatics.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(IndicatorManagerSubsystem)
@@ -24,7 +24,7 @@ void UIndicatorManagerSubsystem::Deinitialize()
     //RemoveAllIndicator();
 }
 
-void UIndicatorManagerSubsystem::StartIndicator(const TArray<AActor*>& TargetActors, TSubclassOf<UIndicatorWidget> DefaultWidgetClass)
+void UIndicatorManagerSubsystem::StartIndicator(const TArray<AActor*>& TargetActors, TSubclassOf<UIndicatorWidgetBase> DefaultWidgetClass)
 {
     check(DefaultWidgetClass);
     if(TargetActors.IsEmpty())
@@ -37,7 +37,7 @@ void UIndicatorManagerSubsystem::StartIndicator(const TArray<AActor*>& TargetAct
         for(AActor* Actor : TargetActors)
         {
             if(Widgets.Contains(Actor))continue;
-            UIndicatorWidget* WidgetInstance = CreateWidget<UIndicatorWidget>(PC, DefaultWidgetClass);
+            UIndicatorWidgetBase* WidgetInstance = CreateWidget<UIndicatorWidgetBase>(PC, DefaultWidgetClass);
             WidgetInstance->TargetActor = Actor;
             Widgets.Emplace(Actor, WidgetInstance);
             if(!WidgetInstance->IsInViewport())
@@ -54,11 +54,11 @@ void UIndicatorManagerSubsystem::RemoveIndicator(AActor* TargetActor)
 {
     if(Widgets.Contains(TargetActor))
     {
-        if(UUserWidget* IndicatorWidget = Widgets[TargetActor])
+        if(UUserWidget* IndicatorWidgetBase = Widgets[TargetActor])
         {
-            if(IndicatorWidget->IsInViewport())
+            if(IndicatorWidgetBase->IsInViewport())
             {
-                IndicatorWidget->RemoveFromParent();
+                IndicatorWidgetBase->RemoveFromParent();
                 Widgets[TargetActor] = nullptr;
                 Widgets.Remove(TargetActor);
                 UE_LOG(LogTargetIndicator, Warning, TEXT("%s is Removed."), *GetNameSafe(TargetActor));

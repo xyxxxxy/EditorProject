@@ -3,7 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "IndicatorWidget.generated.h"
+#include "IndicatorWidgetBase.generated.h"
 
 class UIndicatorManagerSubsystem;
 class UTextBlock;
@@ -17,11 +17,11 @@ enum class EIndicatorShowTypes : uint8
 };
 
 UCLASS(Abstract)
-class TARGETINDICATOR_API UIndicatorWidget : public UUserWidget
+class TARGETINDICATOR_API UIndicatorWidgetBase : public UUserWidget
 {
     GENERATED_BODY()
 public:
-    UIndicatorWidget(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+    UIndicatorWidgetBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
     virtual void NativePreConstruct() override;
     virtual void NativeConstruct() override;
@@ -55,7 +55,10 @@ protected:
     EIndicatorShowTypes ShowTypes = EIndicatorShowTypes::Always;
 
     UPROPERTY(EditAnywhere, Category = "Indicator")
-    float UpdateFrequency = 0.2f;
+    float UpdateFrequency = 0.02f;
+
+    UPROPERTY(EditAnywhere, Category = "Indicator")
+    float LimitedDistance = 4.0f;
 
     UPROPERTY(EditAnyWhere, meta = (InlineEditConditionToggle = "TargetOffset"), Category = "Indicator")
     bool bUseTargetoffset = false;
@@ -63,8 +66,7 @@ protected:
     UPROPERTY(EditAnywhere, meta = (EditCondition = "bUseTargetoffset"), Category = "Indicator")
     FVector TargetOffset = FVector::ZeroVector;
 
-    UPROPERTY(EditAnywhere, Category = "Indicator")
-    float LimitedDistance = 2.0f;
+
 
     UPROPERTY(BlueprintReadWrite,Category = "Indicator")
     float Distance = 0.0f;

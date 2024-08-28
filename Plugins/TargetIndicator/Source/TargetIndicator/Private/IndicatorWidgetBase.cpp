@@ -1,4 +1,4 @@
-#include "IndicatorWidget.h"
+#include "IndicatorWidgetBase.h"
 #include "IndicatorManagerSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -8,21 +8,21 @@
 #include "Components/TextBlock.h"
 #include "Components/CanvasPanelSlot.h"
 
-#include UE_INLINE_GENERATED_CPP_BY_NAME(IndicatorWidget)
+#include UE_INLINE_GENERATED_CPP_BY_NAME(IndicatorWidgetBase)
 
-#define LOCTEXT_NAMESPACE "IndicatorWidget"
+#define LOCTEXT_NAMESPACE "IndicatorWidgetBase"
 
-UIndicatorWidget::UIndicatorWidget(const FObjectInitializer& ObjectInitializer)
+UIndicatorWidgetBase::UIndicatorWidgetBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 }
 
-void UIndicatorWidget::NativePreConstruct()
+void UIndicatorWidgetBase::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 }
 
-void UIndicatorWidget::NativeConstruct()
+void UIndicatorWidgetBase::NativeConstruct()
 {
 	Super::NativeConstruct();
 
@@ -33,25 +33,41 @@ void UIndicatorWidget::NativeConstruct()
 		IndicatorManagerSubsystem = GameInstance->GetSubsystem<UIndicatorManagerSubsystem>();
 	}
 	check(IndicatorManagerSubsystem);
-	IndicatorTimerDelegate.BindUObject(this, &UIndicatorWidget::UpdateIndicator);
+	IndicatorTimerDelegate.BindUObject(this, &UIndicatorWidgetBase::UpdateIndicator);
 	GetWorld()->GetTimerManager().SetTimer(IndicatorTimerHandle, IndicatorTimerDelegate, UpdateFrequency, true);
 }
 
-void UIndicatorWidget::NativeDestruct()
+void UIndicatorWidgetBase::NativeDestruct()
 {
 	Super::NativeDestruct();
 	IndicatorTimerDelegate.Unbind();
 	GetWorld()->GetTimerManager().ClearTimer(IndicatorTimerHandle);
 }
 
-void UIndicatorWidget::UpdateIndicator()
+void UIndicatorWidgetBase::UpdateIndicator()
 {
-	UpdateDistance();
-	CheckDistance();
-	UpdatePosition();
+	switch (ShowTypes)
+	{
+		case EIndicatorShowTypes::Always:
+			UpdateDistance();
+			CheckDistance();
+			UpdatePosition();
+			break;
+
+		case EIndicatorShowTypes::Clip:
+			UpdateDistance();
+			CheckDistance();
+			SetRelativePosition();
+			SetPrimitivePosition();
+			ClippingPosition = PrimitivePosition / UWidgetLayoutLibrary::GetViewportScale(GetWorld());
+			UCanvasPanelSlot* IndicatorSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(TargetIndicator);
+			IndicatorSlot->SetPosition(ClippingPosition);
+			break;
+	}
+
 }
 
-void UIndicatorWidget::UpdateDistance()
+void UIndicatorWidgetBase::UpdateDistance()
 {
 	float OriginDistance = UKismetMathLibrary::Vector_Distance(GetOwningPlayer()->GetPawn()->GetActorLocation(),
 	                                                           TargetActor->GetActorLocation());
@@ -60,7 +76,7 @@ void UIndicatorWidget::UpdateDistance()
 	DistanceTextBlock->SetText(FText::Format(LOCTEXT("Distance", "{0}m"), DistanceText));
 }
 
-void UIndicatorWidget::CheckDistance()
+void UIndicatorWidgetBase::CheckDistance()
 {
 	if(Distance < LimitedDistance)
 	{
@@ -72,11 +88,11 @@ void UIndicatorWidget::CheckDistance()
 	}
 }
 
-void UIndicatorWidget::UpdatePosition()
+void UIndicatorWidgetBase::UpdatePosition()
 {
 	SetRelativePosition();
 	SetPrimitivePosition();
-	
+
 	if (SetClippingPosition(PrimitivePosition, RelativePosition, DefaultWindowsSize, ClippingPosition))
 	{
 		// ClippingPosition
@@ -93,7 +109,7 @@ void UIndicatorWidget::UpdatePosition()
 	}
 }
 
-void UIndicatorWidget::SetRelativePosition()
+void UIndicatorWidgetBase::SetRelativePosition()
 {
 	// ------------------------------------------- Get ViewportSize ---------------------------------
 	if (GEngine && GEngine->GameViewport)
@@ -103,10 +119,10 @@ void UIndicatorWidget::SetRelativePosition()
 	RelativePosition = DefaultWindowsSize / 2;
 }
 
-void UIndicatorWidget::SetPrimitivePosition()
+void UIndicatorWidgetBase::SetPrimitivePosition()
 {
 	const FVector TargetActorLocation = TargetActor->GetActorLocation();
-	const FVector IndicatorLocation = TargetActorLocation + TargetOffset;
+	const FVector IndicatorLocation = bUseTargetoffset ? TargetActorLocation + TargetOffset : TargetActorLocation;
 	FVector2D ScreenPosition;
 	if (UGameplayStatics::ProjectWorldToScreen(GetOwningPlayer(), IndicatorLocation, ScreenPosition))
 	{
@@ -167,7 +183,7 @@ void UIndicatorWidget::SetPrimitivePosition()
 	PrimitivePosition = RelativePosition + Position;
 }
 
-bool UIndicatorWidget::SetClippingPosition(const FVector2D& Target, const FVector2D& Relative, const FVector2D& WindowsSize, FVector2D& Clip)
+bool UIndicatorWidgetBase::SetClippingPosition(const FVector2D& Target, const FVector2D& Relative, const FVector2D& WindowsSize, FVector2D& Clip)
 {
 	float TargetX = Target.X;
 	float TargetY = Target.Y;

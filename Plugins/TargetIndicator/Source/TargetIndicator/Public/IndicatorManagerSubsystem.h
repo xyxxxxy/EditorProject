@@ -4,7 +4,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "IndicatorManagerSubsystem.generated.h"
 
-class UIndicatorWidget;
+class UIndicatorWidgetBase;
 
 UCLASS()
 class TARGETINDICATOR_API UIndicatorManagerSubsystem : public UGameInstanceSubsystem
@@ -19,7 +19,7 @@ public:
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Indicator")
-    void StartIndicator(const TArray<AActor*>& TargetActors, TSubclassOf<UIndicatorWidget> DefaultWidgetClass);
+    void StartIndicator(const TArray<AActor*>& TargetActors, TSubclassOf<UIndicatorWidgetBase> DefaultWidgetClass);
 
     UFUNCTION(BlueprintCallable, Category = "Indicator")
     void RemoveIndicator(AActor* TargetActor);
@@ -29,5 +29,5 @@ public:
 
 private:
     UPROPERTY(Transient)
-    TMap<TObjectPtr<AActor>, TObjectPtr<UIndicatorWidget>> Widgets;
+    TMap<TObjectPtr<AActor>, TObjectPtr<UIndicatorWidgetBase>> Widgets;
 };
