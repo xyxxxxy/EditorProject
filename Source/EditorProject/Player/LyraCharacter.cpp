@@ -11,7 +11,7 @@
 #include "LyraLog.h"
 #include "Core/LyraGameState.h"
 #include "LyraHelpers.h"
-
+#include "Inventory/LyraInventoryComponent.h"
 
 // Sets default values
 ALyraCharacter::ALyraCharacter(const FObjectInitializer& ObjectInitializer)
@@ -20,23 +20,14 @@ ALyraCharacter::ALyraCharacter(const FObjectInitializer& ObjectInitializer)
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
+	InventoryComponent = CreateDefaultSubobject<ULyraInventoryComponent>(TEXT("InventoryComponent"));
+
 	// Lyra is an RTS style input by default, so player pawn should never affect navigation
 	bCanAffectNavigationGeneration = false;
 
 	CameraOffset = FVector::ZeroVector;
 	ZoomVelocity = 10.f;
 }
-
-
-// void ALyraCharacter::CalcCamera(float DeltaTime, FMinimalViewInfo& OutResult)
-// {
-// 	// DO NOT CALL SUPER -- this is a complete override
-// 	//-Super::CalcCamera(DeltaTime, OutResult);
-
-// 	GetActorEyesViewPoint(OutResult.Location, OutResult.Rotation);
-
-// 	OutResult.Location += CameraOffset;
-// }
 
 
 void ALyraCharacter::PossessedBy(AController* NewController)
@@ -128,6 +119,8 @@ void ALyraCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		BindInputValueAction(EnhancedInput, LyraTag::InputTag_Time_Stop, ETriggerEvent::Completed, this, &ThisClass::Input_Time_Stop, bLogNotFound);
 
 		BindInputValueAction(EnhancedInput, LyraTag::InputTag_OpenMenu, ETriggerEvent::Completed, this, &ThisClass::PushHUDWidget, bLogNotFound);
+
+		BindInputValueAction(EnhancedInput, LyraTag::InputTag_Inventory, ETriggerEvent::Completed, this, &ThisClass::Input_Inventory, bLogNotFound);
 	}
 }
 
@@ -240,6 +233,12 @@ void ALyraCharacter::Input_Zoom(const FInputActionValue& InputActionValue)
 	//Lyra_VERBOSE_LOG(TEXT("Zoom %0.2f"), Value);
 
 	CameraOffset.Z = FMath::Clamp(CameraOffset.Z + (Value * ZoomVelocity), 0.f, 500.f);
+}
+
+
+void ALyraCharacter::Input_Inventory(const FInputActionValue& InputActionValue)
+{
+	K2_PushInventoryWidget();
 }
 
 void ALyraCharacter::PushHUDWidget(const FInputActionValue& InputActionValue)

@@ -14,7 +14,7 @@ class ULyraInputActionMap;
 class UInputMappingContext;
 class UCommonActivatableWidget;
 class ULyraHUDLayout;
-
+class ULyraInventoryComponent;
 
 /**
  * Player Pawn
@@ -27,12 +27,6 @@ class ALyraCharacter : public AModularCharacter
 public:
 	ALyraCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	//~AActor interface
-	//virtual void CalcCamera(float DeltaTime, FMinimalViewInfo& OutResult) override;
-	//~End of AActor interface
-
-	
-
 protected:
 	//~APawn interface
 	virtual void PossessedBy(AController* NewController) override;
@@ -42,7 +36,7 @@ protected:
 
 protected:
 	/** The HUD Layout widget to use (must be derived from Lyra HUD Layout) */
-	UPROPERTY(EditDefaultsOnly, DisplayName="HUD Layout Class")
+	UPROPERTY(EditDefaultsOnly, DisplayName="HUD Layout Class", Category = Widget, AdvancedDisplay)
 	TSubclassOf<ULyraHUDLayout> HUDLayoutClass;
 
 	/** Used to keep track of the widget that was created to be our HUD */
@@ -75,9 +69,17 @@ protected:
 
 	void Input_Zoom(const FInputActionValue& InputActionValue);
 
+	void Input_Inventory(const FInputActionValue& InputActionValue);
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "PushInventoryWidget"))
+	void K2_PushInventoryWidget();
+
 	void PushHUDWidget(const FInputActionValue& InputActionValue);
 
 private:
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Inventory")
+	TObjectPtr<ULyraInventoryComponent> InventoryComponent;
+
 	UPROPERTY(Transient, VisibleInstanceOnly)
 	TSet<int32> InputEventBindingHandles;
 

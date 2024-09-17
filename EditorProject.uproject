@@ -21,6 +21,10 @@
 		{
 			"Name": "TargetIndicator",
 			"Enabled": true
+		},
+		{
+			"Name": "LyraInventory",
+			"Enabled": true
 		}
 	]
 }

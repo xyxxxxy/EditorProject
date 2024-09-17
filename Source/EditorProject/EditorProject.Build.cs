@@ -18,7 +18,8 @@ public class EditorProject : ModuleRules
 			"Engine", 
 			"InputCore", 
 			"Slate", 
-			"SlateCore" 
+			"SlateCore", 
+			"LyraInventory"
 		});
 
 		PrivateDependencyModuleNames.AddRange( new string[] {
