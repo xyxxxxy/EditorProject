@@ -35,6 +35,22 @@ protected:
 	//~End of APawn interface
 
 protected:
+	template<class UserClass, typename... VarTypes>
+	void BindInputValueAction(UEnhancedInputComponent* EnhancedInputComponent, FGameplayTag InputTag, ETriggerEvent TriggerEvent, UserClass* Object, typename FEnhancedInputActionHandlerValueSignature::template TMethodPtr< UserClass, VarTypes... > Func, bool bLogIfNotFound, VarTypes... Vars);
+
+	void UnbindInputValueActions();
+
+	void Input_Look(const FInputActionValue& InputActionValue);
+	void Input_Move(const FInputActionValue& InputActionValue);
+
+	void Input_Inventory(const FInputActionValue& InputActionValue);
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "PushInventoryWidget"))
+	void K2_PushInventoryWidget();
+
+	void PushHUDWidget(const FInputActionValue& InputActionValue);
+
+protected:
 	/** The HUD Layout widget to use (must be derived from Lyra HUD Layout) */
 	UPROPERTY(EditDefaultsOnly, DisplayName="HUD Layout Class", Category = Widget, AdvancedDisplay)
 	TSubclassOf<ULyraHUDLayout> HUDLayoutClass;
@@ -44,46 +60,19 @@ protected:
 	TWeakObjectPtr<UCommonActivatableWidget> HUDLayoutWidget;
 
 	/** Array of IMC to use while this Pawn is possessed */
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TArray<TObjectPtr<const UInputMappingContext>> InputMappingContexts;
 
 	/** Map of InputActions to C++ GameplayTags */
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	TObjectPtr<const ULyraInputActionMap> InputActionMap;
 
-	/** Speed at which Zoom changes */
-	UPROPERTY(EditDefaultsOnly)
-	float ZoomVelocity;
-
-protected:
-	template<class UserClass, typename... VarTypes>
-	void BindInputValueAction(UEnhancedInputComponent* EnhancedInputComponent, FGameplayTag InputTag, ETriggerEvent TriggerEvent, UserClass* Object, typename FEnhancedInputActionHandlerValueSignature::template TMethodPtr< UserClass, VarTypes... > Func, bool bLogIfNotFound, VarTypes... Vars);
-
-	void UnbindInputValueActions();
-
-	void Input_Look(const FInputActionValue& InputActionValue);
-	void Input_Move(const FInputActionValue& InputActionValue);
-
-	void Input_Time_Start(const FInputActionValue& InputActionValue);
-	void Input_Time_Stop(const FInputActionValue& InputActionValue);
-
-	void Input_Zoom(const FInputActionValue& InputActionValue);
-
-	void Input_Inventory(const FInputActionValue& InputActionValue);
-
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "PushInventoryWidget"))
-	void K2_PushInventoryWidget();
-
-	void PushHUDWidget(const FInputActionValue& InputActionValue);
-
+	
 private:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Inventory")
 	TObjectPtr<ULyraInventoryComponent> InventoryComponent;
 
 	UPROPERTY(Transient, VisibleInstanceOnly)
 	TSet<int32> InputEventBindingHandles;
-
-	UPROPERTY(Transient, VisibleInstanceOnly)
-	FVector CameraOffset;
-
+	
 };

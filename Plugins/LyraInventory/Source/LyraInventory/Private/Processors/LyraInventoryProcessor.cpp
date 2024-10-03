@@ -31,10 +31,6 @@ ENetRole ULyraInventoryProcessor::GetOwnerRole() const
 	return GetOwningInventory()->GetOwnerRole();
 }
 
-FLyraInventoryItemSlotHandle ULyraInventoryProcessor::CreateInventorySlot(const FGameplayTagContainer& SlotTags, const FLyraInventoryItemSlotFilter& Filter)
-{
-	return GetOwningInventory()->CreateInventorySlot(SlotTags, FLyraInventoryItemFilterHandle(new FLyraInventoryItemSlotFilter(Filter)));
-}
 
 void ULyraInventoryProcessor::RemoveInventorySlot(const FLyraInventoryItemSlotHandle& SlotHandle)
 {

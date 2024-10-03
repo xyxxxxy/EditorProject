@@ -14,7 +14,6 @@ ULyraInventoryComponent::ULyraInventoryComponent(const FObjectInitializer& Objec
 : Super(ObjectInitializer)
 {
 	bWantsInitializeComponent = true;
-	int32 a = 1;
 }
 
 UAbilitySystemComponent* ULyraInventoryComponent::GetOwnerAbilitySystemComponent()
@@ -97,7 +96,7 @@ ULyraInventoryProcessor* ULyraInventoryComponent::AddProcessor(TSubclassOf<ULyra
 	}
 
 	ULyraInventoryProcessor* NewProcessor = NewObject<ULyraInventoryProcessor>(this, ProcessorClass);
-	NewProcessor->FragmentTags = ProcessorTags;
+	//NewProcessor->FragmentTags = ProcessorTags;
 	//NewProcessor->ItemCategory = InItemCategory;
 	// 1
 	CategoryToProcessors[InItemCategory].Processors.Add(NewProcessor);
@@ -237,11 +236,6 @@ ULyraInventoryItemInstance* ULyraInventoryComponent::GetItemInstanceBySlot(const
 	
 	const FLyraInventoryItemSlot& ItemSlot = GetItemSlot(ItemHandle);
 	return ItemSlot.ItemInstance;
-}
-
-FLyraInventoryItemSlotHandle ULyraInventoryComponent::CreateInventorySlot(const FGameplayTagContainer& SlotTags, const FLyraInventoryItemFilterHandle& Filter)
-{
-	return FLyraInventoryItemSlotHandle();
 }
 
 FLyraInventoryItemSlot& ULyraInventoryComponent::GetItemSlot(const FLyraInventoryItemSlotHandle& Handle)

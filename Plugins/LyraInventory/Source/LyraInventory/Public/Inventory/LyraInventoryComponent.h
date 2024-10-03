@@ -39,8 +39,11 @@ public:
 	ULyraInventoryComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 public:
-	UFUNCTION(BlueprintPure, Category = "Ability")
+	UFUNCTION(BlueprintPure, Category = Abilities)
 	virtual UAbilitySystemComponent* GetOwnerAbilitySystemComponent();
+
+	UFUNCTION(BlueprintPure, Category = Inventory)
+	static ULyraInventoryComponent* FindInventoryComponent(AActor* Actor) { return Actor ? Actor->FindComponentByClass<ULyraInventoryComponent>() : nullptr; }
 	
 	virtual void InitializeComponent() override;
 	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
@@ -122,8 +125,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	virtual ULyraInventoryItemInstance* GetItemInstanceBySlot(const FLyraInventoryItemSlotHandle& ItemHandle);
 	
-	virtual FLyraInventoryItemSlotHandle CreateInventorySlot(const FGameplayTagContainer& SlotTags, const FLyraInventoryItemFilterHandle& Filter);
-
 	UFUNCTION(BlueprintCallable, Category = Inventory)
 	virtual FLyraInventoryItemSlot& GetItemSlot(const FLyraInventoryItemSlotHandle& Handle);
 	
@@ -159,10 +160,10 @@ public:
 	
 protected:
 
-	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "On Inventory Update" ), Category = Inventory)
+	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnInventoryUpdate" ), Category = Inventory)
 	FOnInventoryUpdateDelegate BP_OnInventoryUpdate;
 	
-	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "On ItemSlot Update" ), Category = Inventory)
+	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnItemSlotUpdate" ), Category = Inventory)
 	FOnItemSlotUpdateDelegate BP_OnItemSlotUpdate;
 	
 private:

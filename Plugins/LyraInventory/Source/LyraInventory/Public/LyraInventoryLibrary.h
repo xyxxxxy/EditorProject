@@ -18,25 +18,22 @@ class LYRAINVENTORY_API ULyraInventoryLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION(BlueprintCallable,Category = "Inventory | Attribute")
+	UFUNCTION(BlueprintCallable, Category = "Inventory | Attribute")
 	static bool ASCHasAttributeSet(UAbilitySystemComponent* ASC,TSubclassOf<UAttributeSet> AttributeSetClass);
 
-	UFUNCTION(BlueprintCallable,Category = "Inventory | Attribute")
+	UFUNCTION(BlueprintCallable, Category = "Inventory | Attribute")
 	static bool ASCAddInstancedAttributeSet(UAbilitySystemComponent* ASC,UAttributeSet* AttributeSet);
 	
-	UFUNCTION(BlueprintCallable,Category = "Inventory | Struct")
+	UFUNCTION(BlueprintCallable, Category = "Inventory | Struct")
 	static bool FindFragment_UI(ULyraInventoryItemInstance* ItemInstance,FLyraInventoryTableRowFragment_UI& FragmentStruct);
 
-	UFUNCTION(BlueprintCallable,Category = "Inventory | Struct")
+	UFUNCTION(BlueprintCallable, Category = "Inventory | Struct")
 	static bool FindFragment_World(ULyraInventoryItemInstance* ItemInstance,FLyraInventoryTableRowFragment_World& FragmentStruct);
 
-	UFUNCTION(BlueprintCallable,Category = "Inventory | Struct")
+	UFUNCTION(BlueprintCallable, Category = "Inventory | Struct")
 	static bool FindFragment_AbilitySet(ULyraInventoryItemInstance* ItemInstance,FLyraInventoryTableRowFragment_AbilitySet& FragmentStruct);
 
-	UFUNCTION(BlueprintCallable,Category = "Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	static FLyraInventoryItemSlot& GetItemSlot(const FLyraInventoryItemSlotHandle& Handle);
-	
-	UFUNCTION(BlueprintCallable,Category = "Inventory")
-	static FGameplayTagContainer GetParentTags(const FGameplayTagContainer& TagContainer);
 	
 };

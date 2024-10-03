@@ -7,6 +7,7 @@
 UENUM(BlueprintType)
 enum class ELyraItemCategory
 {
+	None,
 	Prop,
 	Equipment,
 	Document,

@@ -3,13 +3,28 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-//#include "InstancedStruct/LyraInventoryTableRow.h"
 #include "LyraItemEnum.h"
 #include "LyraInventoryItemTypes.generated.h"
 
 class ULyraInventoryComponent;
 class ULyraInventoryItemInstance;
 class ULyraInventoryProcessor_Bag;
+
+USTRUCT(BlueprintType)
+struct LYRAINVENTORY_API FLyraInventoryItemHandleEntry 
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Inventory)
+	int32 SlotId = -1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Inventory)
+	FGameplayTagContainer SlotTags;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Inventory)
+	ELyraItemCategory ItemCategory = ELyraItemCategory::None;
+
+};
 
 USTRUCT(BlueprintType)
 struct LYRAINVENTORY_API FLyraInventoryItemSlotFilter

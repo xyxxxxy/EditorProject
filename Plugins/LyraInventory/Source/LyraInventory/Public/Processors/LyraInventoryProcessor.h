@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "GameplayTagAssetInterface.h"
+//#include "GameplayTagAssetInterface.h"
 #include "Engine/EngineTypes.h"
 #include "InstancedStruct/LyraInventoryTableRow.h"
 #include "Inventory/LyraInventoryItemTypes.h"
@@ -16,7 +16,7 @@ class UAbilitySystemComponent;
  *
  */
 UCLASS(Blueprintable, BlueprintType, Abstract, EditInlineNew, DefaultToInstanced)
-class LYRAINVENTORY_API ULyraInventoryProcessor : public UObject, public IGameplayTagAssetInterface
+class LYRAINVENTORY_API ULyraInventoryProcessor : public UObject
 {
 	GENERATED_BODY()
 public:
@@ -57,9 +57,6 @@ public:
 	void OnItemSlotChange(const FLyraInventoryItemSlotHandle& SlotHandle, ULyraInventoryItemInstance* Item, ULyraInventoryItemInstance* PreviousItem, FGameplayTag Context);
 	virtual void OnItemSlotChange_Implementation(const FLyraInventoryItemSlotHandle& SlotHandle, ULyraInventoryItemInstance* Item, ULyraInventoryItemInstance* PreviousItem, FGameplayTag Context) {}
 	
-	//Creates a new slot with given tags
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	FLyraInventoryItemSlotHandle CreateInventorySlot(const FGameplayTagContainer& SlotTags, const FLyraInventoryItemSlotFilter& Filter);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void RemoveInventorySlot(const FLyraInventoryItemSlotHandle& SlotHandle);
@@ -75,11 +72,6 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Lyra|Inventory")
 	bool HasBegunPlay() const;
 	
-	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override
-	{
-		TagContainer.AppendTags(FragmentTags);
-	}
-
 	virtual void GetDebugStrings(TArray<FString>& OutStrings, bool Detailed) const { }
 
 
@@ -90,8 +82,5 @@ public:
 protected:
 	virtual void PostInventoryUpdate(FAuraInventoryItemArray& InventoryRef, TArray<FLyraInventoryItemSlotHandle>& SlotHandles){};
 	virtual void PopulateSlotReferenceArray(FAuraInventoryItemArray& InventoryRef, TArray<FLyraInventoryItemSlotHandle>& SlotHandles){};
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Processor")
-	FGameplayTagContainer FragmentTags;
 
 };

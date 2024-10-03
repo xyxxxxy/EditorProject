@@ -24,9 +24,7 @@ ALyraCharacter::ALyraCharacter(const FObjectInitializer& ObjectInitializer)
 
 	// Lyra is an RTS style input by default, so player pawn should never affect navigation
 	bCanAffectNavigationGeneration = false;
-
-	CameraOffset = FVector::ZeroVector;
-	ZoomVelocity = 10.f;
+	
 }
 
 
@@ -112,14 +110,9 @@ void ALyraCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		// Look and Zoom should update every tick while Triggered
 		BindInputValueAction(EnhancedInput, LyraTag::InputTag_Look, ETriggerEvent::Triggered, this, &ThisClass::Input_Look, bLogNotFound);
 		BindInputValueAction(EnhancedInput, LyraTag::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move, bLogNotFound);
-		BindInputValueAction(EnhancedInput, LyraTag::InputTag_Zoom, ETriggerEvent::Triggered, this, &ThisClass::Input_Zoom, bLogNotFound);
-
+		
 		// Start/Stop Time only on completed input actions, not on pending actions
-		BindInputValueAction(EnhancedInput, LyraTag::InputTag_Time_Start, ETriggerEvent::Completed, this, &ThisClass::Input_Time_Start, bLogNotFound);
-		BindInputValueAction(EnhancedInput, LyraTag::InputTag_Time_Stop, ETriggerEvent::Completed, this, &ThisClass::Input_Time_Stop, bLogNotFound);
-
 		BindInputValueAction(EnhancedInput, LyraTag::InputTag_OpenMenu, ETriggerEvent::Completed, this, &ThisClass::PushHUDWidget, bLogNotFound);
-
 		BindInputValueAction(EnhancedInput, LyraTag::InputTag_Inventory, ETriggerEvent::Completed, this, &ThisClass::Input_Inventory, bLogNotFound);
 	}
 }
@@ -200,41 +193,6 @@ void ALyraCharacter::Input_Move(const FInputActionValue& InputActionValue)
 		AddMovementInput(RightDirection, MovementVector.X);
 	}
 }
-
-
-void ALyraCharacter::Input_Time_Start(const FInputActionValue& InputActionValue)
-{
-	ALyraGameState* GameState = Cast<ALyraGameState>(GetWorld()->GetGameState());
-	if (ensure(GameState))
-	{
-		//Lyra_DISPLAY_LOG(TEXT("Start Time!"));
-		//GameState->UnpauseGameTime();
-	}
-}
-
-
-void ALyraCharacter::Input_Time_Stop(const FInputActionValue& InputActionValue)
-{
-	ALyraGameState* GameState = Cast<ALyraGameState>(GetWorld()->GetGameState());
-	if (ensure(GameState))
-	{
-		//Lyra_DISPLAY_LOG(TEXT("Stop Time!"));
-		//GameState->PauseGameTime();
-	}
-}
-
-
-void ALyraCharacter::Input_Zoom(const FInputActionValue& InputActionValue)
-{
-	// Get the non-normalized value
-	// (usually this is 1.0 or -1.0 but it can/does sometimes go to 2, 3, ...)
-	const float Value = InputActionValue.Get<float>();
-
-	//Lyra_VERBOSE_LOG(TEXT("Zoom %0.2f"), Value);
-
-	CameraOffset.Z = FMath::Clamp(CameraOffset.Z + (Value * ZoomVelocity), 0.f, 500.f);
-}
-
 
 void ALyraCharacter::Input_Inventory(const FInputActionValue& InputActionValue)
 {

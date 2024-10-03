@@ -7,8 +7,7 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LyraInventoryLibrary)
 
-bool ULyraInventoryLibrary::ASCHasAttributeSet(UAbilitySystemComponent* ASC,
-                                               TSubclassOf<UAttributeSet> AttributeSetClass)
+bool ULyraInventoryLibrary::ASCHasAttributeSet(UAbilitySystemComponent* ASC, TSubclassOf<UAttributeSet> AttributeSetClass)
 {
 	for (const UAttributeSet* AttributeSet : ASC->GetSpawnedAttributes())
 	{
@@ -41,8 +40,7 @@ bool ULyraInventoryLibrary::ASCAddInstancedAttributeSet(UAbilitySystemComponent*
 	return false;
 }
 
-bool ULyraInventoryLibrary::FindFragment_UI(ULyraInventoryItemInstance* ItemInstance,
-	FLyraInventoryTableRowFragment_UI& FragmentStruct)
+bool ULyraInventoryLibrary::FindFragment_UI(ULyraInventoryItemInstance* ItemInstance, FLyraInventoryTableRowFragment_UI& FragmentStruct)
 {
 	if(!IsValid(ItemInstance))return false;
 
@@ -55,8 +53,7 @@ bool ULyraInventoryLibrary::FindFragment_UI(ULyraInventoryItemInstance* ItemInst
 	return false;
 }
 
-bool ULyraInventoryLibrary::FindFragment_World(ULyraInventoryItemInstance* ItemInstance,
-	FLyraInventoryTableRowFragment_World& FragmentStruct)
+bool ULyraInventoryLibrary::FindFragment_World(ULyraInventoryItemInstance* ItemInstance, FLyraInventoryTableRowFragment_World& FragmentStruct)
 {
 	if(!IsValid(ItemInstance))return false;
 
@@ -69,8 +66,7 @@ bool ULyraInventoryLibrary::FindFragment_World(ULyraInventoryItemInstance* ItemI
 	return false;
 }
 
-bool ULyraInventoryLibrary::FindFragment_AbilitySet(ULyraInventoryItemInstance* ItemInstance,
-	FLyraInventoryTableRowFragment_AbilitySet& FragmentStruct)
+bool ULyraInventoryLibrary::FindFragment_AbilitySet(ULyraInventoryItemInstance* ItemInstance, FLyraInventoryTableRowFragment_AbilitySet& FragmentStruct)
 {
 	if(!IsValid(ItemInstance))return false;
 
@@ -88,10 +84,6 @@ FLyraInventoryItemSlot& ULyraInventoryLibrary::GetItemSlot(const FLyraInventoryI
 	return Handle.ParentInventory->GetItemSlot(Handle);
 }
 
-FGameplayTagContainer ULyraInventoryLibrary::GetParentTags(const FGameplayTagContainer& TagContainer)
-{
-	return TagContainer.GetGameplayTagParents();
-}
 
 
 
