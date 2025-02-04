@@ -29,6 +29,8 @@ struct LYRAINVENTORY_API FInventoryItemSlotHandlesArray
 	
 };
 
+
+
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Inventory), meta = (BlueprintSpawnableComponent))
 class LYRAINVENTORY_API ULyraInventoryComponent : public UActorComponent
 {
@@ -135,6 +137,9 @@ public:
 	virtual void RemoveInventorySlot(const FLyraInventoryItemSlotHandle& Handle);
 	virtual void BulkCreateInventorySlots(ELyraItemCategory Category, const FGameplayTagContainer& SlotTags, const FLyraInventoryItemFilterHandle& Filter, int32 Count, TArray<FLyraInventoryItemSlotHandle>& OutSlotHandles);
 
+protected:
+	void OnItemSlotUpdate(ULyraInventoryComponent* InventoryComponent, const FLyraInventoryItemSlotHandle& SlotHandle, ULyraInventoryItemInstance* CurrentItem, ULyraInventoryItemInstance* PreviousItem);
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory | Item Query")
 	bool Query_GetAllSlots(const FLyraInventoryQuery& Query, TArray<FLyraInventoryItemSlotHandle>& OutSlotHandles);
@@ -155,10 +160,10 @@ public:
 		ULyraInventoryItemInstance* /* PreviousItem */);
 	
 public:
-	FOnInventoryUpdateDelegateNative& OnInventoryUpdate(){ return OnInventoryUpdateDelegateNative; }
-	FOnItemSlotUpdateDelegateNative& OnItemSlotUpdate(){ return OnItemSlotUpdateDelegateNative; }
+	FOnInventoryUpdateDelegateNative& OnInventoryUpdateDelegate(){ return OnInventoryUpdateDelegateNative; }
+	FOnItemSlotUpdateDelegateNative& OnItemSlotUpdateDelegate(){ return OnItemSlotUpdateDelegateNative; }
 	
-protected:
+private:
 
 	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnInventoryUpdate" ), Category = Inventory)
 	FOnInventoryUpdateDelegate BP_OnInventoryUpdate;
@@ -167,8 +172,8 @@ protected:
 	FOnItemSlotUpdateDelegate BP_OnItemSlotUpdate;
 	
 private:
-	FOnInventoryUpdateDelegateNative OnInventoryUpdateDelegateNative;
-	FOnItemSlotUpdateDelegateNative OnItemSlotUpdateDelegateNative;
+	mutable FOnInventoryUpdateDelegateNative OnInventoryUpdateDelegateNative;
+	mutable FOnItemSlotUpdateDelegateNative OnItemSlotUpdateDelegateNative;
 
 protected:
 	ULyraInventoryProcessor_Bag* GetProcessorBag(ELyraItemCategory Category);

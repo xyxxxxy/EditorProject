@@ -11,7 +11,7 @@ bool FLyraInventoryItemSlotFilter::AcceptsItem(ULyraInventoryItemInstance* ItemI
 		return false;
 	}
 
-	// TODO: Stack = 1
+	// TODO : Stack = 1
 
 	FGameplayTagContainer StackTags;
 	ItemInstance->GetOwnedGameplayTags(StackTags);

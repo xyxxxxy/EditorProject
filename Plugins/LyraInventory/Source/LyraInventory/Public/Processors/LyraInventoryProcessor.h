@@ -54,8 +54,8 @@ public:
 	virtual void UnbindFromASC_Implementation() {}
 
 	UFUNCTION(BlueprintNativeEvent)
-	void OnItemSlotChange(const FLyraInventoryItemSlotHandle& SlotHandle, ULyraInventoryItemInstance* Item, ULyraInventoryItemInstance* PreviousItem, FGameplayTag Context);
-	virtual void OnItemSlotChange_Implementation(const FLyraInventoryItemSlotHandle& SlotHandle, ULyraInventoryItemInstance* Item, ULyraInventoryItemInstance* PreviousItem, FGameplayTag Context) {}
+	void OnItemSlotChange(const FLyraInventoryItemSlotHandle& SlotHandle, ULyraInventoryItemInstance* Item, ULyraInventoryItemInstance* PreviousItem);
+	virtual void OnItemSlotChange_Implementation(const FLyraInventoryItemSlotHandle& SlotHandle, ULyraInventoryItemInstance* Item, ULyraInventoryItemInstance* PreviousItem) {}
 	
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")

@@ -31,6 +31,17 @@ UAbilitySystemComponent* ULyraInventoryComponent::GetOwnerAbilitySystemComponent
 void ULyraInventoryComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
+
+	OnItemSlotUpdateDelegate().RemoveAll(this);
+	OnItemSlotUpdateDelegate().AddUObject(this, &ULyraInventoryComponent::OnItemSlotUpdate);
+
+	BP_OnItemSlotUpdate.RemoveDynamic(this, &ULyraInventoryComponent::OnItemSlotUpdate);
+	BP_OnItemSlotUpdate.AddDynamic(this, &ULyraInventoryComponent::OnItemSlotUpdate);
+
+	ForEachProcessor([](ULyraInventoryProcessor* Processor)
+		{
+			Processor->OnInventoryInit();
+		});
 }
 
 void ULyraInventoryComponent::OnComponentDestroyed(bool bDestroyingHierarchy)
@@ -196,11 +207,11 @@ bool ULyraInventoryComponent::PlaceItemIntoSlot(ULyraInventoryItemInstance* Item
 	
 	Slot.ItemInstance = Item;
 
-	OnInventoryUpdate().Broadcast(this);
+	OnInventoryUpdateDelegate().Broadcast(this);
 	BP_OnInventoryUpdate.Broadcast(this);
 	
-	OnItemSlotUpdate().Broadcast(this, ItemHandle, Item, PreviousItem);
-	BP_OnItemSlotUpdate.Broadcast(this, ItemHandle, Item, PreviousItem);
+	//OnItemSlotUpdateDelegate().Broadcast(this, ItemHandle, Item, PreviousItem);
+	//BP_OnItemSlotUpdate.Broadcast(this, ItemHandle, Item, PreviousItem);
 	
 	return true;
 }
@@ -221,10 +232,10 @@ bool ULyraInventoryComponent::RemoveItemFromInventory(const FLyraInventoryItemSl
 	
 	ItemSlot.ItemInstance = nullptr;
 
-	OnInventoryUpdate().Broadcast(this);
+	OnInventoryUpdateDelegate().Broadcast(this);
 	BP_OnInventoryUpdate.Broadcast(this);
 	
-	OnItemSlotUpdate().Broadcast(this, ItemHandle,ItemSlot.ItemInstance, PreviousItem);
+	OnItemSlotUpdateDelegate().Broadcast(this, ItemHandle,ItemSlot.ItemInstance, PreviousItem);
 	BP_OnItemSlotUpdate.Broadcast(this, ItemHandle, ItemSlot.ItemInstance, PreviousItem);
 	
 	return true;
@@ -325,6 +336,15 @@ void ULyraInventoryComponent::BulkCreateInventorySlots(ELyraItemCategory Categor
 	}
 	
 }
+
+void ULyraInventoryComponent::OnItemSlotUpdate(ULyraInventoryComponent* InventoryComponent, const FLyraInventoryItemSlotHandle& SlotHandle, ULyraInventoryItemInstance* CurrentItem, ULyraInventoryItemInstance* PreviousItem)
+{
+	ForEachProcessor([InventoryComponent, SlotHandle, CurrentItem, PreviousItem](ULyraInventoryProcessor* Processor) 
+		{
+			Processor->OnItemSlotChange(SlotHandle, CurrentItem, PreviousItem);
+		});
+}
+
 
 bool ULyraInventoryComponent::Query_GetAllSlots(const FLyraInventoryQuery& Query, TArray<FLyraInventoryItemSlotHandle>& OutSlotHandles)
 {

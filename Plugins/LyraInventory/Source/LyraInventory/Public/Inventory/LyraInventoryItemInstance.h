@@ -41,8 +41,6 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Inventory")
 	int32 StackSize = 1;
 
-	int32 asd = 1;
-	
 protected:
 	FLyraInventoryTableRowFragmentsHandle ItemStructsHandle;
 
